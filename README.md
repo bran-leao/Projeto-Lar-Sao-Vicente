@@ -17,7 +17,8 @@ com atenção especial ao controle e à rastreabilidade de medicamentos.
 | [`docs/arquitetura.md`](docs/arquitetura.md) | Camadas, decisões de projeto e modelo de dados |
 | [`docs/regras-de-negocio.md`](docs/regras-de-negocio.md) | Regras implementadas e onde estão no código |
 | [`docs/product-backlog.md`](docs/product-backlog.md) | Backlog priorizado |
-| [`docs/sprints.md`](docs/sprints.md) | Histórico das Sprints e roteiro da Review |
+| [`docs/sprints.md`](docs/sprints.md) | Histórico das Sprints |
+| [`docs/sprint-1-review.md`](docs/sprint-1-review.md) | Roteiro da demonstração e registro de feedback da Sprint 1 |
 
 ## Tecnologias
 

@@ -84,36 +84,12 @@ o código ou compilando.
 O defeito 5 é o mais relevante: era uma falha de segurança real, encontrada por um teste
 de integração escrito justamente para verificar essa hipótese.
 
-## Roteiro da Sprint Review
+## Sprint Review
 
-Sequência sugerida para a demonstração à instituição (10 a 15 minutos):
+O roteiro completo da demonstração, as perguntas dirigidas à instituição e o formulário
+de registro de feedback estão em [`sprint-1-review.md`](sprint-1-review.md).
 
-1. **Acesso protegido.** Abrir `/Residentes` sem estar autenticado e mostrar o
-   redirecionamento para o login.
-2. **Login inválido.** Informar uma senha incorreta e mostrar a mensagem, que não revela
-   se o e-mail existe.
-3. **Login válido.** Entrar no sistema.
-4. **Dashboard.** Apresentar os indicadores e destacar que são contagens reais do banco.
-5. **Listagem.** Mostrar os residentes, a pesquisa por nome e o resultado da pesquisa
-   sem correspondência.
-6. **Cadastro.** Cadastrar um residente ao vivo, deixando primeiro campos em branco e
-   depois informando uma data futura, para mostrar as validações.
-7. **Perfil.** Abrir o residente recém-cadastrado, mostrar a idade calculada e as seções
-   reservadas para Medicamentos, Agenda e Ocorrências.
-8. **Edição.** Alterar o quarto e o grau de dependência; mostrar o registro da última
-   alteração no rodapé.
-9. **Inativação.** Inativar o residente e mostrar que o cadastro permanece íntegro e
-   visível na listagem, apenas com situação diferente.
-10. **Responsividade.** Reduzir a janela do navegador e mostrar o menu adaptado.
-
-### Perguntas a levar para a Review
-
-1. O campo Quarto deve ser sempre obrigatório, ou existe período de espera por vaga?
-2. Quais funções existem na instituição e o que cada uma deve poder acessar?
-3. Qualquer funcionário pode reativar um residente inativado?
-4. Como os quartos são identificados: número, número com letra, ala?
-5. Faz falta um filtro por situação na listagem?
-6. Falta algum campo essencial ao cadastro do residente antes de avançarmos?
+Resultado da reunião: *a preencher após a Review.*
 
 ## Aprendizados
 
