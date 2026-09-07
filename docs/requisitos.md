@@ -67,6 +67,8 @@ Não implementados. Constam aqui apenas para registrar o escopo acordado.
 | RF11 | Cadastro e manutenção de usuários do sistema |
 | RF12 | Cadastro de medicamentos |
 | RF13 | Controle de estoque de medicamentos, incluindo doações |
+| RF25 | Registro manual de medicamentos recebidos sem embalagem ou sem código de barras |
+| RF26 | Conferência das entradas pendentes antes de comporem o estoque |
 | RF14 | Vinculação de medicamentos ao residente |
 | RF15 | Registro da administração de medicamentos |
 | RF16 | Rastreabilidade do fluxo completo do medicamento |
@@ -136,3 +138,11 @@ Sprint Review:
    que administra o medicamento ao residente?
 9. **Farmacêutico responsável.** A instituição possui farmacêutico responsável? Isso
    afeta quem pode registrar determinadas operações.
+10. **Quem confere o medicamento recebido.** Toda entrada registrada manualmente ficará
+    aguardando conferência antes de contar no estoque. É preciso saber quem tem
+    competência para liberar: qualquer funcionário, apenas a enfermagem, ou apenas o
+    farmacêutico? Enquanto a US08 não existir, qualquer usuário autenticado poderá
+    conferir.
+11. **Conferência também para caixas lacradas.** A conferência é obrigatória para o
+    registro manual. Para entradas identificadas por leitura de código, a instituição
+    deseja que passem igualmente por revisão, ou podem contar no estoque diretamente?

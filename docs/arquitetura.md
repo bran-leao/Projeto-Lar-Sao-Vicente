@@ -264,6 +264,63 @@ aparelho digita o código no campo em foco e envia Enter, o que para a aplicaç�
 envio de formulário comum. Leitores exclusivamente 1D não leem DataMatrix e, por isso,
 não atendem ao requisito de lote e validade.
 
+## 5.2 Conferência de entradas sem código de barras
+
+Requisito levantado pela instituição no planejamento da Sprint 2: medicamentos que
+chegam fora da caixa — cartelas avulsas, frascos soltos, doações abertas — precisam ser
+registrados, mas **não podem entrar no estoque antes de revisados**.
+
+### O estoque é calculado, não transferido
+
+A solução intuitiva seria manter uma área de triagem e **mover** o item para o estoque
+após a revisão. Foi descartada: uma operação de transferência pode falhar parcialmente,
+duplica o registro e cria a possibilidade de alguém esquecer de executá-la.
+
+Em vez disso, **toda entrada possui uma situação**, e o estoque é a soma das entradas
+conferidas. Nada se move.
+
+| Situação | Conta no estoque? | Significado |
+|----------|-------------------|-------------|
+| `AguardandoConferencia` | Não | Registrada, ainda não liberada para uso |
+| `Conferida` | Sim | Revisada e liberada |
+| `Recusada` | Não | Revisada e recusada, com o motivo registrado |
+
+Consequências:
+
+- Uma entrada pendente não precisa ser "segurada" em lugar nenhum: ela simplesmente não
+  é contada. Não existe transferência que possa falhar ou ser esquecida.
+- A entrada recusada permanece registrada, coerente com a regra de não excluir
+  fisicamente informação com histórico. Além disso, é informação de gestão: permite
+  responder quantas doações vencidas a instituição recebeu em um período.
+- O histórico é único, do recebimento à conferência, com data e responsável em cada
+  etapa — preenchidos por `AuditableEntity`.
+
+### Quando a conferência é obrigatória
+
+**Toda entrada registrada manualmente, sem leitura de código, nasce
+`AguardandoConferencia`.** A razão é direta: os dados foram digitados, não verificados.
+
+Para entradas identificadas por leitura de código, a exigência de conferência é decisão
+da instituição, a ser confirmada em Review. Doação de caixa lacrada pode ou não exigir
+revisão, dependendo de quem recebe fisicamente o material.
+
+### Validade não identificada
+
+Cartela avulsa frequentemente chega sem validade legível. O sistema precisa aceitar o
+registro assinalando **"validade não identificada"**, em vez de recusar o cadastro — do
+contrário, o caso mais comum em doação seria justamente o que o sistema não consegue
+registrar.
+
+Entradas nessa condição devem ser destacadas na tela de conferência: validade
+desconhecida é o principal risco em medicamento doado.
+
+### Quem confere
+
+Enquanto não houver perfis de acesso (US08), qualquer usuário autenticado pode conferir.
+A restrição por perfil entra junto com a US08, e a conferência é um dos casos que a
+tornam necessária: liberar medicamento para uso é decisão de responsabilidade técnica,
+não operacional.
+
 ## 6. Organização de pastas
 
 ```
