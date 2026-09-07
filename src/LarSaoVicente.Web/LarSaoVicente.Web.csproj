@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- Camada de apresentação: ASP.NET Core MVC (Controllers, Views, ViewModels). -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\LarSaoVicente.Domain\LarSaoVicente.Domain.csproj" />
+    <ProjectReference Include="..\LarSaoVicente.Infrastructure\LarSaoVicente.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Permite que o projeto de testes acesse a classe Program para testes de integração. -->
+    <InternalsVisibleTo Include="LarSaoVicente.Tests" />
+  </ItemGroup>
+
+</Project>

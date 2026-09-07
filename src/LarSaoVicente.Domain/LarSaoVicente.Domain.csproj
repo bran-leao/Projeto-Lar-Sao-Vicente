@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Camada de domínio: entidades, enums e regras de negócio puras.
+    Não referencia Entity Framework, ASP.NET ou qualquer tecnologia de infraestrutura.
+  -->
+
+</Project>
