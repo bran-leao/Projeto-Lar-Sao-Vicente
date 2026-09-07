@@ -279,6 +279,10 @@ e não o cadastro de usuários.
 11. **Vocês controlam lote e validade hoje?** Em papel, planilha, ou não há controle?
 12. **Quem recebe a doação fisicamente** é a mesma pessoa que administra o medicamento?
 13. **A instituição tem farmacêutico responsável?**
+14. **Quem pode liberar um medicamento para uso?** Todo remédio registrado à mão vai
+    ficar aguardando conferência antes de contar no estoque. Quem tem competência para
+    conferir: qualquer funcionário, a enfermagem, o farmacêutico?
+15. **Caixa lacrada também passa por conferência,** ou pode ir direto para o estoque?
 
 > Duas perguntas decidem o rumo do trabalho. A **7** continua sendo a mais importante do
 > projeto: sem saber quem pode fazer o quê, não há como registrar quem administrou cada

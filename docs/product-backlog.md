@@ -18,7 +18,7 @@ permanece obrigatória antes das US11 e US12.
 | Sprint | Entrega | Escopo previsto |
 |--------|---------|-----------------|
 | 2 | 19/09/2026 | US09, US23, US24 — catálogo de medicamentos e leitura de código de barras |
-| 3 | 26/09/2026 | US10, US25 — entrada com lote, validade e origem; alerta de vencimento |
+| 3 | 26/09/2026 | US10, US26, US27, US25 — entrada com lote, validade e origem; registro manual sem código; conferência; alerta de vencimento |
 | 4 | 03/10/2026 | US08 — usuários e perfis de acesso |
 | 5 | 10/10/2026 | US11 — vínculo entre medicamento e residente |
 | 6 | 17/10/2026 | US12 — registro da administração, com responsável |
@@ -52,6 +52,8 @@ As estimativas em Sprints são preliminares e serão revistas no refinamento.
 | US09 | Como funcionário autorizado, quero cadastrar medicamentos, para que possam ser controlados pelo sistema | US01 | meia Sprint |
 | US23 | Como funcionário autorizado, quero identificar um medicamento lendo o código de barras da caixa, para não precisar procurá-lo digitando | US09 | meia Sprint |
 | US24 | Como funcionário autorizado, quero pesquisar o catálogo por nome comercial ou princípio ativo, para localizar um medicamento mesmo sem a caixa em mãos | US09 | pequena |
+| US26 | Como funcionário autorizado, quero registrar manualmente um medicamento que chegou sem caixa ou sem código, para que ele não fique fora do controle | US09, US10 | meia Sprint |
+| US27 | Como responsável pela conferência, quero revisar as entradas pendentes e liberá-las ou recusá-las, para que apenas medicamento verificado entre no estoque | US26 | meia Sprint |
 | US25 | Como funcionário autorizado, quero ser avisado dos medicamentos próximos do vencimento, para consumi-los antes de perder | US10 | pequena |
 | US08 | Como administrador, quero cadastrar usuários e definir seus perfis, para que cada funcionário acesse apenas o que lhe compete | US01 | 1 Sprint |
 | US10 | Como funcionário autorizado, quero registrar a entrada de medicamentos, identificando a origem, inclusive doações, e informando lote e validade, para controlar o que chega à instituição | US09 | 1 Sprint |
@@ -100,6 +102,19 @@ Não são funcionalidades para o usuário, mas precisam ser considerados no plan
 | IT12 | Avaliar a lista de preços da CMED como fonte de dados de medicamentos | Média | Confirmar se traz GTIN, formato e periodicidade. Importação para o banco local, nunca consulta em tempo de uso |
 | IT08 | Definir com o orientador se o uso de IA será declarado no trabalho | Alta | Decide o item IT09; algumas instituições exigem declaração formal |
 | IT09 | Limpeza das marcações de atribuição antes da entrega final | Baixa | Depende de IT08. Envolve reescrever as mensagens de commit, mesclar a branch de desenvolvimento na `main` e remover o `CLAUDE.md`. Exige reescrita de histórico, portanto deve ser feita **depois** do último commit e antes de o repositório ser compartilhado |
+
+## Decisões de escopo registradas no planejamento
+
+**Medicamentos sem código de barras (US26 e US27).** Requisito levantado pela
+instituição: medicamentos que chegam fora da caixa precisam ser registrados, mas não
+podem entrar no estoque antes de revisados.
+
+A solução adotada não move o item entre áreas. Toda entrada possui uma situação, e o
+estoque é a soma das entradas conferidas — uma entrada pendente simplesmente não é
+contada. Detalhamento em `arquitetura.md`, seção 5.2.
+
+As duas histórias ficam na **Sprint 3**, junto com a US10, porque compartilham a mesma
+tela de entrada. Separá-las obrigaria a construir a mesma tela duas vezes.
 
 ## Itens levantados durante a Sprint 1
 
