@@ -7,9 +7,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
+      Necessario para o ASP.NET Core Identity (SignInManager e autenticacao por cookie),
+      cujos tipos fazem parte do framework compartilhado do ASP.NET Core.
+    -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
   </ItemGroup>
 
