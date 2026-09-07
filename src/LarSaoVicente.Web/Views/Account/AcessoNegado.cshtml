@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Acesso negado";
+}
+
+<div class="cartao">
+    <div class="cartao__corpo estado-vazio">
+        <p class="estado-vazio__titulo">Você não tem permissão para acessar esta página.</p>
+        <p class="mb-3">Se acredita que deveria ter acesso, procure a administração da instituição.</p>
+        <a class="btn btn-outline-secondary btn-sm" asp-controller="Dashboard" asp-action="Index">
+            Voltar ao Dashboard
+        </a>
+    </div>
+</div>

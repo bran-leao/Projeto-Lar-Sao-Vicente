@@ -1,0 +1,13 @@
+@{
+    Layout = User.Identity?.IsAuthenticated == true ? "_Layout" : "_LayoutLogin";
+}
+
+<div class="@(User.Identity?.IsAuthenticated == true ? "cartao" : "")">
+    <div class="cartao__corpo estado-vazio">
+        <p class="estado-vazio__titulo">@ViewData["Title"]</p>
+        <p class="mb-3">@ViewData["Mensagem"]</p>
+        <a class="btn btn-outline-secondary btn-sm" asp-controller="Dashboard" asp-action="Index">
+            Voltar ao início
+        </a>
+    </div>
+</div>

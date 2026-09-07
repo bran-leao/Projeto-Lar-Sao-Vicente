@@ -14,9 +14,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Permite que o projeto de testes acesse a classe Program para testes de integração. -->
-    <InternalsVisibleTo Include="LarSaoVicente.Tests" />
-  </ItemGroup>
-
 </Project>

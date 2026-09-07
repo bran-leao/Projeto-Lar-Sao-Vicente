@@ -1,0 +1,84 @@
+@model ResidentIndexViewModel
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+    <form method="get" asp-action="Index" class="d-flex gap-2 flex-grow-1" style="max-width: 420px;">
+        <input type="search" name="busca" value="@Model.Busca" class="form-control"
+               placeholder="Pesquisar pelo nome" aria-label="Pesquisar residente pelo nome" />
+        <button type="submit" class="btn btn-outline-secondary">Pesquisar</button>
+    </form>
+
+    <a class="btn btn-primary" asp-action="Novo">Novo residente</a>
+</div>
+
+<div class="cartao">
+    @if (Model.SemCadastros)
+    {
+        <div class="cartao__corpo estado-vazio">
+            <p class="estado-vazio__titulo">Nenhum residente cadastrado</p>
+            <p class="mb-3">Comece cadastrando o primeiro residente da instituição.</p>
+            <a class="btn btn-primary btn-sm" asp-action="Novo">Cadastrar residente</a>
+        </div>
+    }
+    else if (Model.BuscaSemResultado)
+    {
+        <div class="cartao__corpo estado-vazio">
+            <p class="estado-vazio__titulo">Nenhum residente encontrado</p>
+            <p class="mb-3">Não há residentes cujo nome contenha &ldquo;@Model.Busca&rdquo;.</p>
+            <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Limpar pesquisa</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table tabela-dados align-middle mb-0">
+                <caption class="visually-hidden">Lista de residentes da instituição</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Idade</th>
+                        <th scope="col">Quarto</th>
+                        <th scope="col">Grau de dependência</th>
+                        <th scope="col">Situação</th>
+                        <th scope="col"><span class="visually-hidden">Ações</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var residente in Model.Residentes)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Detalhes" asp-route-id="@residente.Id"
+                                   class="text-decoration-none fw-semibold">
+                                    @residente.FullName
+                                </a>
+                            </td>
+                            <td>@residente.Idade anos</td>
+                            <td>@residente.Room</td>
+                            <td>@residente.DependencyLevel.ObterNomeExibicao()</td>
+                            <td>
+                                @if (residente.Status == ResidentStatus.Ativo)
+                                {
+                                    <span class="badge text-bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-secondary">Inativo</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-secondary btn-sm"
+                                   asp-action="Detalhes" asp-route-id="@residente.Id">
+                                    Abrir
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cartao__cabecalho border-top border-bottom-0 text-secondary fw-normal small">
+            @Model.Residentes.Count residente(s) exibido(s).
+        </div>
+    }
+</div>
