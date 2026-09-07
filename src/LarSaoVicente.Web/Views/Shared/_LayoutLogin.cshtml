@@ -1,0 +1,26 @@
+@*
+    Layout enxuto para as telas acessíveis sem autenticação.
+    Não exibe menu nem dados do usuário, que ainda não existem nesse momento.
+*@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] &middot; Lar São Vicente de Paulo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="pagina-login">
+        <div class="pagina-login__cartao">
+            @RenderBody()
+        </div>
+    </div>
+
+    @* O jQuery precede os scripts de validação, que dependem dele. *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,84 @@
+@model ResidentFormViewModel
+@{
+    var acao = Model.EhEdicao ? "Editar" : "Novo";
+    var textoBotao = Model.EhEdicao ? "Salvar alterações" : "Cadastrar residente";
+}
+
+<div class="cartao" style="max-width: 760px;">
+    <div class="cartao__cabecalho">
+        @(Model.EhEdicao ? "Editar residente" : "Dados do residente")
+    </div>
+
+    <div class="cartao__corpo">
+        <form method="post" asp-action="@acao" asp-route-id="@Model.Id" novalidate>
+
+            @* Erros gerais, como uma regra recusada pelo domínio. *@
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="row g-3">
+                <div class="col-12">
+                    <label asp-for="FullName" class="form-label obrigatorio"></label>
+                    <input asp-for="FullName" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="BirthDate" class="form-label obrigatorio"></label>
+                    <input asp-for="BirthDate" class="form-control" type="date" />
+                    <span asp-validation-for="BirthDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="AdmissionDate" class="form-label obrigatorio"></label>
+                    <input asp-for="AdmissionDate" class="form-control" type="date" />
+                    <span asp-validation-for="AdmissionDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Room" class="form-label obrigatorio"></label>
+                    <input asp-for="Room" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="Room" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="DependencyLevel" class="form-label obrigatorio"></label>
+                    <select asp-for="DependencyLevel" class="form-select"
+                            asp-items="Html.GetEnumSelectList<DependencyLevel>()">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <span asp-validation-for="DependencyLevel" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="4"></textarea>
+                    <div class="form-text">
+                        Registre apenas informações necessárias ao cuidado do residente.
+                    </div>
+                    <span asp-validation-for="Notes" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">@textoBotao</button>
+
+                @if (Model.EhEdicao)
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Detalhes" asp-route-id="@Model.Id">
+                        Cancelar
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+                }
+            </div>
+
+            <p class="text-secondary small mt-3 mb-0">Os campos marcados com * são obrigatórios.</p>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

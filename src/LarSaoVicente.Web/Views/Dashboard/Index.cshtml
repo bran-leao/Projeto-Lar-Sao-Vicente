@@ -1,0 +1,68 @@
+@model DashboardViewModel
+
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="cartao h-100">
+            <div class="cartao__corpo">
+                <div class="indicador__rotulo">Residentes cadastrados</div>
+                <div class="indicador__valor">@Model.Total</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="cartao h-100">
+            <div class="cartao__corpo">
+                <div class="indicador__rotulo">Ativos</div>
+                <div class="indicador__valor">@Model.Ativos</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="cartao h-100">
+            <div class="cartao__corpo">
+                <div class="indicador__rotulo">Inativos</div>
+                <div class="indicador__valor">@Model.Inativos</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cartao">
+    <div class="cartao__cabecalho">Residentes ativos por grau de dependência</div>
+    <div class="cartao__corpo">
+        @if (Model.Ativos == 0)
+        {
+            <p class="text-secondary mb-0">Nenhum residente ativo no momento.</p>
+        }
+        else
+        {
+            <div class="row g-3">
+                <div class="col-12 col-sm-4">
+                    <div class="indicador__rotulo">Grau I</div>
+                    <div class="indicador__valor">@Model.AtivosGrauI</div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="indicador__rotulo">Grau II</div>
+                    <div class="indicador__valor">@Model.AtivosGrauII</div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="indicador__rotulo">Grau III</div>
+                    <div class="indicador__valor">@Model.AtivosGrauIII</div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model.SemRegistros)
+{
+    <div class="cartao mt-3">
+        <div class="cartao__corpo estado-vazio">
+            <p class="estado-vazio__titulo">Ainda não há residentes cadastrados</p>
+            <p class="mb-3">Cadastre o primeiro residente para que os indicadores sejam calculados.</p>
+            <a class="btn btn-primary btn-sm" asp-controller="Residents" asp-action="Novo">
+                Cadastrar residente
+            </a>
+        </div>
+    </div>
+}

@@ -17,4 +17,13 @@ public interface IDateTimeProvider
 
     /// <summary>Data de hoje no fuso horário de referência da instituição (America/Sao_Paulo).</summary>
     DateOnly Today { get; }
+
+    /// <summary>
+    /// Converte um instante gravado em UTC para o horário de referência da instituição.
+    /// </summary>
+    /// <remarks>
+    /// Utilizado ao exibir os campos de auditoria, para que o funcionário veja o horário
+    /// em que a operação realmente ocorreu no Brasil.
+    /// </remarks>
+    DateTime ToInstitutionTime(DateTime utc);
 }

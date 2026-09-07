@@ -22,8 +22,10 @@ public class SystemDateTimeProvider : IDateTimeProvider
 
     public DateTime UtcNow => DateTime.UtcNow;
 
-    public DateOnly Today => DateOnly.FromDateTime(
-        TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, InstitutionTimeZone));
+    public DateOnly Today => DateOnly.FromDateTime(ToInstitutionTime(DateTime.UtcNow));
+
+    public DateTime ToInstitutionTime(DateTime utc) =>
+        TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utc, DateTimeKind.Utc), InstitutionTimeZone);
 
     private static TimeZoneInfo ResolveTimeZone()
     {

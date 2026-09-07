@@ -1,0 +1,111 @@
+@model ResidentDetailsViewModel
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-start mb-3">
+    <div>
+        <a asp-action="Index" class="text-decoration-none small">&larr; Voltar para residentes</a>
+        <h2 class="h4 mt-1 mb-1">@Model.FullName</h2>
+        @if (Model.EstaAtivo)
+        {
+            <span class="badge text-bg-success">Ativo</span>
+        }
+        else
+        {
+            <span class="badge text-bg-secondary">Inativo</span>
+        }
+    </div>
+
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+
+        @if (Model.EstaAtivo)
+        {
+            @* A inativação altera dados, portanto é enviada por POST com token antifalsificação. *@
+            <form method="post" asp-action="Inativar" asp-route-id="@Model.Id"
+                  onsubmit="return confirm('Confirmar a inativação de @Model.FullName? O cadastro e o histórico serão preservados.');">
+                <button type="submit" class="btn btn-outline-danger">Inativar</button>
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-action="Reativar" asp-route-id="@Model.Id">
+                <button type="submit" class="btn btn-outline-success">Reativar</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="cartao mb-3">
+    <div class="cartao__cabecalho">Informações do residente</div>
+    <div class="cartao__corpo">
+        <dl class="row mb-0">
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Nome completo</dt>
+            <dd class="col-sm-8 col-lg-9">@Model.FullName</dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Data de nascimento</dt>
+            <dd class="col-sm-8 col-lg-9">
+                @Model.BirthDate.ToString("dd/MM/yyyy") <span class="text-secondary">(@Model.Idade anos)</span>
+            </dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Entrada na instituição</dt>
+            <dd class="col-sm-8 col-lg-9">@Model.AdmissionDate.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Quarto</dt>
+            <dd class="col-sm-8 col-lg-9">@Model.Room</dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Grau de dependência</dt>
+            <dd class="col-sm-8 col-lg-9">@Model.DependencyLevel.ObterNomeExibicao()</dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Observações gerais</dt>
+            <dd class="col-sm-8 col-lg-9 mb-0">
+                @if (string.IsNullOrWhiteSpace(Model.Notes))
+                {
+                    <span class="text-secondary">Nenhuma observação registrada.</span>
+                }
+                else
+                {
+                    <span style="white-space: pre-line;">@Model.Notes</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+@*
+    Seções previstas no backlog. São exibidas desde já para que a estrutura da tela
+    esteja definida, deixando explícito que ainda não foram desenvolvidas — nenhuma
+    delas apresenta dado algum.
+*@
+<div class="row g-3">
+    <div class="col-12 col-lg-4">
+        <div class="cartao h-100">
+            <div class="cartao__cabecalho">Medicamentos</div>
+            <div class="cartao__corpo text-secondary small">
+                Módulo previsto para uma próxima Sprint.
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="cartao h-100">
+            <div class="cartao__cabecalho">Agenda</div>
+            <div class="cartao__corpo text-secondary small">
+                Módulo previsto para uma próxima Sprint.
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="cartao h-100">
+            <div class="cartao__cabecalho">Ocorrências</div>
+            <div class="cartao__corpo text-secondary small">
+                Módulo previsto para uma próxima Sprint.
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="text-secondary small mt-3 mb-0">
+    Cadastrado em @Model.CriadoEm.ToString("dd/MM/yyyy 'às' HH:mm")
+    @if (Model.AtualizadoEm.HasValue)
+    {
+        <text>&middot; última alteração em @Model.AtualizadoEm.Value.ToString("dd/MM/yyyy 'às' HH:mm")</text>
+    }
+</p>
