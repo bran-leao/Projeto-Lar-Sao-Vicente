@@ -83,7 +83,7 @@ public class ResidentsController : Controller
 
     /// <summary>Perfil do residente (US04).</summary>
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Detalhes(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Detalhes([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var residente = await _context.Residents
             .AsNoTracking()
@@ -148,7 +148,7 @@ public class ResidentsController : Controller
 
     /// <summary>Formulário de edição (US05).</summary>
     [HttpGet("{id:guid}/Editar")]
-    public async Task<IActionResult> Editar(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Editar([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var residente = await _context.Residents
             .AsNoTracking()
@@ -165,12 +165,15 @@ public class ResidentsController : Controller
 
     [HttpPost("{id:guid}/Editar")]
     public async Task<IActionResult> Editar(
-        Guid id,
+        [FromRoute] Guid id,
         ResidentFormViewModel modelo,
         CancellationToken cancellationToken)
     {
-        // O identificador válido é o da rota. Confiar no campo enviado no formulário
-        // permitiria alterar um residente diferente do que foi aberto.
+        // [FromRoute] é obrigatório aqui. Sem ele o ASP.NET Core preenche o parâmetro
+        // com o campo "Id" enviado no formulário, porque o provedor de valores de
+        // formulário tem precedência sobre o de rota. Um usuário mal-intencionado
+        // poderia então abrir o próprio cadastro, trocar esse campo oculto e gravar
+        // sobre o registro de outro residente.
         modelo.Id = id;
         ViewData["Title"] = "Editar residente";
 
@@ -217,7 +220,7 @@ public class ResidentsController : Controller
     /// Inativa o residente, preservando o cadastro e todo o histórico (US06).
     /// </summary>
     [HttpPost("{id:guid}/Inativar")]
-    public async Task<IActionResult> Inativar(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Inativar([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var residente = await _context.Residents.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 
@@ -243,7 +246,7 @@ public class ResidentsController : Controller
     /// não teria como ser desfeita pela própria interface.
     /// </remarks>
     [HttpPost("{id:guid}/Reativar")]
-    public async Task<IActionResult> Reativar(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Reativar([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var residente = await _context.Residents.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 
