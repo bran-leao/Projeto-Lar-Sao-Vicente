@@ -169,24 +169,100 @@ Tabelas do Identity criadas pela migration inicial: `AspNetUsers`, `AspNetRoles`
 
 ### Previsto para as próximas Sprints
 
-Ainda **não implementado**. Registrado para orientar o desenho das próximas entregas:
+Ainda **não implementado**. Registrado para orientar o desenho das próximas entregas.
+
+O fluxo de medicamentos exige **quatro entidades distintas**. Reuni-las em uma única
+tabela "Medicamentos" é o erro de modelagem mais comum nesse tipo de sistema e
+inviabiliza a rastreabilidade, porque cada uma responde a uma pergunta diferente:
+
+| Entidade | Responde | Exemplo |
+|----------|----------|---------|
+| `Medication` | Que remédio é? | Losartana 50&nbsp;mg comprimido, laboratório X |
+| `MedicationBatch` | Qual remessa? | 20 caixas, lote ABC123, validade 03/2027, doação |
+| `MedicationPrescription` | Quem toma o quê? | Maria Oliveira, 1 comprimido às 8h |
+| `MedicationAdministration` | O que aconteceu? | Fulano administrou às 8h05 de 12/09 |
 
 ```
-Resident ──< MedicationPrescription >── Medication
-                                            │
-                                            ▼
-                                    MedicationStock
-                                            │
-                                            ▼
-                                    MedicationMovement ──> User (responsável)
-                                            │
-                                            ▼
-                                 MedicationAdministration ──> User (responsável)
+Medication ──< MedicationBatch                    (entrada: compra ou doação)
+     │                  │
+     │                  ▼
+     │          MedicationAdministration ──> User (responsável)
+     │                  ▲
+     └──< MedicationPrescription >── Resident
 ```
 
 A estrutura atual comporta essa evolução sem alterações estruturais: `Resident` já
 possui identificador estável, e `AuditableEntity` já registra o responsável por cada
 operação.
+
+## 5.1 Identificação de medicamentos por código de barras
+
+Decisão de projeto tomada no planejamento da Sprint 2, registrada aqui porque orienta
+o desenho de todo o módulo.
+
+### O que cada código identifica
+
+A caixa de medicamento pode trazer dois códigos, que dizem coisas diferentes:
+
+| Código | Identifica | Traz lote e validade? |
+|--------|-----------|----------------------|
+| **EAN-13** (barras tradicional) | O **produto**: apresentação comercial | Não. Toda caixa do mesmo produto tem código idêntico |
+| **DataMatrix** (2D, do SNCM) | A **caixa específica**: produto, série, lote e validade | Sim |
+
+A consequência é direta: com EAN-13 apenas, lote e validade precisam ser digitados a
+cada entrada. Para doações isso é crítico, pois validade curta é o principal risco.
+
+A implantação do SNCM (Lei nº 11.903/2009) sofreu sucessivos adiamentos, e não se pode
+assumir que toda caixa recebida trará DataMatrix. **O sistema deve funcionar nos dois
+casos**: quando houver DataMatrix, lote e validade são preenchidos automaticamente;
+quando não houver, são digitados.
+
+### Catálogo que se constrói pelo uso
+
+O sistema **não depende de nenhuma API externa** para identificar medicamentos. Ao ler
+um código:
+
+- **código conhecido** — o medicamento é exibido imediatamente;
+- **código desconhecido** — abre-se o cadastro com o código já preenchido, e alguém da
+  instituição completa nome, princípio ativo e concentração uma única vez.
+
+A partir da segunda caixa daquele produto, a identificação é automática. O catálogo
+cresce com o uso real da instituição.
+
+A razão é a mesma que levou a servir Bootstrap e jQuery localmente: a instituição pode
+ter internet instável, e a leitura acontece no balcão, com alguém esperando. Uma
+dependência de rede em tempo de uso transformaria uma falha de internet em impedimento
+de trabalho — e, no contexto acadêmico, em risco de indisponibilidade durante a
+apresentação.
+
+A importação de uma base pública de medicamentos (a lista de preços da CMED é a
+candidata mais promissora, por conter GTIN) permanece como **melhoria futura**, na
+forma de importação para o banco local, nunca como consulta em tempo de uso.
+
+### Validação em três camadas, toda local
+
+1. **Formato** — o EAN-13 possui dígito verificador calculado a partir dos doze
+   primeiros dígitos. O sistema refaz o cálculo e recusa leituras inconsistentes antes
+   de consultar o banco.
+2. **Tipo** — o comprimento e a estrutura distinguem um EAN-13 de um DataMatrix GS1.
+3. **Existência** — consulta ao catálogo pelo código.
+
+### Consequências para a modelagem
+
+- O código de barras é **opcional** em `Medication`: cartelas avulsas recebidas por
+  doação frequentemente não possuem código, e o cadastro manual precisa continuar
+  possível.
+- Índice **único** sobre o código, permitindo múltiplos registros sem código.
+- O mesmo medicamento de laboratórios diferentes possui códigos diferentes e gera
+  registros distintos, o que é correto para rastreabilidade. Por isso a busca por
+  princípio ativo é obrigatória, e não apenas por nome comercial.
+
+### Hardware
+
+Leitor **USB 2D em modo HID** (emulação de teclado). Não exige driver nem SDK: o
+aparelho digita o código no campo em foco e envia Enter, o que para a aplicação é um
+envio de formulário comum. Leitores exclusivamente 1D não leem DataMatrix e, por isso,
+não atendem ao requisito de lote e validade.
 
 ## 6. Organização de pastas
 

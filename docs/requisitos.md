@@ -119,3 +119,20 @@ Sprint Review:
    pode reativar ou se a operação deve ser restrita.
 4. **Identificação do quarto.** Não se sabe se a instituição usa apenas número, número
    com letra, ou nome de ala. O campo aceita hoje até 20 caracteres livres.
+
+### Sobre o módulo de medicamentos (Sprint 2 em diante)
+
+5. **Tipo de código nas embalagens.** As caixas recebidas trazem o código bidimensional
+   DataMatrix, ou apenas o código de barras tradicional? A resposta define se lote e
+   validade poderão ser capturados automaticamente na leitura ou terão de ser digitados
+   a cada entrada. Pedir para conferirem algumas caixas na despensa, de compra e de
+   doação.
+6. **Forma de chegada das doações.** Caixa lacrada, cartela avulsa ou frasco já aberto?
+   Cartela avulsa costuma não ter código de barras algum, situação que o sistema precisa
+   prever.
+7. **Controle atual de lote e validade.** Existe algum controle hoje, em papel ou
+   planilha, ou nenhum?
+8. **Responsável pelo recebimento.** Quem recebe fisicamente a doação é a mesma pessoa
+   que administra o medicamento ao residente?
+9. **Farmacêutico responsável.** A instituição possui farmacêutico responsável? Isso
+   afeta quem pode registrar determinadas operações.
