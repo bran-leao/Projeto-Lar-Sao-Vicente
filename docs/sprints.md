@@ -3,6 +3,18 @@
 Histórico das Sprints do projeto. Cada Sprint registra objetivo, escopo, resultado e
 aprendizados, servindo de base para o capítulo de metodologia do TCC.
 
+## Calendário
+
+Sprints de **7 dias**, com entrega aos **sábados**.
+
+| Sprint | Entrega | Situação |
+|--------|---------|----------|
+| Sprint 1 | sábado, 12/09/2026 | Concluída, aguardando Review |
+| Sprint 2 | sábado, 19/09/2026 | A planejar |
+| Sprint 3 | sábado, 26/09/2026 | A planejar |
+
+As datas seguintes seguem a mesma cadência semanal.
+
 ---
 
 # Sprint 1
@@ -11,6 +23,16 @@ aprendizados, servindo de base para o capítulo de metodologia do TCC.
 
 > Disponibilizar a primeira versão funcional do sistema, permitindo acesso autenticado e
 > cadastro, consulta e manutenção básica dos residentes da instituição.
+
+## Período
+
+| | |
+|---|---|
+| Entrega e Sprint Review | sábado, **12/09/2026** |
+| Desenvolvimento versionado | 07/09/2026 |
+
+A data de início formal da Sprint não foi registrada no início dos trabalhos. O que o
+repositório comprova é que todo o código versionado foi produzido em 07/09/2026.
 
 ## Escopo
 
@@ -59,8 +81,8 @@ Critérios acordados e sua verificação nesta Sprint:
 | Categoria | Quantidade |
 |-----------|-----------|
 | Unitários (regras de domínio) | 19 |
-| Integração (autenticação) | 15 |
-| Integração (residentes) | 12 |
+| Integração (autenticação) | 13 |
+| Integração (residentes) | 14 |
 | Integração (dashboard) | 2 |
 | **Total** | **48** |
 

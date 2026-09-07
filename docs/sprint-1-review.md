@@ -7,6 +7,7 @@ acesso autenticado e cadastro, consulta e manutenção básica dos residentes.
 
 | | |
 |---|---|
+| Data | sábado, 12/09/2026 |
 | Participantes | Equipe de desenvolvimento, representantes da instituição, orientador |
 | Duração sugerida | 1 hora |
 | Demonstração | 15 minutos |
