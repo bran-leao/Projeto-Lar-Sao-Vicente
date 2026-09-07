@@ -25,7 +25,9 @@ demonstráveis à instituição.
 Sprint tem escopo acordado. Se identificar algo útil fora do escopo, registre em
 `docs/product-backlog.md` e comente com o usuário — não implemente por conta própria.
 
-Situação atual: **Sprint 1 concluída** (US01 a US07).
+Sprints de **7 dias**, com entrega aos **sábados**. Calendário em `docs/sprints.md`.
+
+Situação atual: **Sprint 1 concluída** (US01 a US07), entrega em 12/09/2026.
 
 ## Tecnologias — não altere sem justificar
 
