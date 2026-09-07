@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LarSaoVicente.Domain/LarSaoVicente.Domain.csproj" />
+    <Project Path="src/LarSaoVicente.Infrastructure/LarSaoVicente.Infrastructure.csproj" />
+    <Project Path="src/LarSaoVicente.Web/LarSaoVicente.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LarSaoVicente.Tests/LarSaoVicente.Tests.csproj" />
+  </Folder>
+</Solution>
