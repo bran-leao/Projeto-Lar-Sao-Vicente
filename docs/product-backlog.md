@@ -3,6 +3,30 @@
 Ordenado por prioridade. A ordem reflete a dor relatada pela instituição: o fluxo de
 medicamentos é a principal necessidade, mas depende de cadastros básicos existirem antes.
 
+## Repriorização acordada após a Sprint 1
+
+O plano inicial colocava o cadastro de usuários e perfis (US08) como Sprint 2. A ordem
+foi revista: o **catálogo de medicamentos não depende de perfis de acesso** — é um
+cadastro básico, como o de residentes — e antecipá-lo entrega mais cedo aquilo que a
+instituição relatou como sua maior dor.
+
+O que **não** pode ser antecipado é o vínculo entre medicamento e residente: essa
+informação é **dado pessoal sensível de saúde** pela LGPD, e a partir dali o controle de
+acesso por perfil deixa de ser desejável e passa a ser exigência legal. Por isso a US08
+permanece obrigatória antes das US11 e US12.
+
+| Sprint | Entrega | Escopo previsto |
+|--------|---------|-----------------|
+| 2 | 19/09/2026 | US09, US23, US24 — catálogo de medicamentos e leitura de código de barras |
+| 3 | 26/09/2026 | US10, US25 — entrada com lote, validade e origem; alerta de vencimento |
+| 4 | 03/10/2026 | US08 — usuários e perfis de acesso |
+| 5 | 10/10/2026 | US11 — vínculo entre medicamento e residente |
+| 6 | 17/10/2026 | US12 — registro da administração, com responsável |
+| 7 | 24/10/2026 | US14 — consulta de rastreabilidade ponta a ponta |
+
+Datas conforme a cadência semanal. O escopo de cada Sprint é confirmado no respectivo
+Sprint Planning, à luz do feedback da Review anterior.
+
 Legenda: **Concluído** · **Em andamento** · **Pendente**
 
 ## Sprint 1 — Base do sistema · Concluído
@@ -25,10 +49,13 @@ As estimativas em Sprints são preliminares e serão revistas no refinamento.
 
 | ID | User Story | Depende de | Estimativa |
 |----|------------|-----------|------------|
+| US09 | Como funcionário autorizado, quero cadastrar medicamentos, para que possam ser controlados pelo sistema | US01 | meia Sprint |
+| US23 | Como funcionário autorizado, quero identificar um medicamento lendo o código de barras da caixa, para não precisar procurá-lo digitando | US09 | meia Sprint |
+| US24 | Como funcionário autorizado, quero pesquisar o catálogo por nome comercial ou princípio ativo, para localizar um medicamento mesmo sem a caixa em mãos | US09 | pequena |
+| US25 | Como funcionário autorizado, quero ser avisado dos medicamentos próximos do vencimento, para consumi-los antes de perder | US10 | pequena |
 | US08 | Como administrador, quero cadastrar usuários e definir seus perfis, para que cada funcionário acesse apenas o que lhe compete | US01 | 1 Sprint |
-| US09 | Como funcionário autorizado, quero cadastrar medicamentos, para que possam ser controlados pelo sistema | US08 | 1 Sprint |
-| US10 | Como funcionário autorizado, quero registrar a entrada de medicamentos, identificando a origem, inclusive doações, para controlar o que chega à instituição | US09 | 1 Sprint |
-| US11 | Como funcionário autorizado, quero vincular medicamentos a um residente, para saber a quem cada medicamento se destina | US09 | 1 Sprint |
+| US10 | Como funcionário autorizado, quero registrar a entrada de medicamentos, identificando a origem, inclusive doações, e informando lote e validade, para controlar o que chega à instituição | US09 | 1 Sprint |
+| US11 | Como funcionário autorizado, quero vincular medicamentos a um residente, para saber a quem cada medicamento se destina | US09, **US08** | 1 Sprint |
 | US12 | Como profissional responsável, quero registrar a administração de um medicamento, para que fique documentado quem administrou, o quê e quando | US11 | 1 Sprint |
 | US13 | Como funcionário autorizado, quero consultar o estoque de medicamentos, para saber o que há disponível e o que está por acabar | US10 | 1 Sprint |
 
@@ -68,6 +95,9 @@ Não são funcionalidades para o usuário, mas precisam ser considerados no plan
 | IT05 | Filtro por situação na listagem | Média | Sugerido a partir do uso; confirmar necessidade com a instituição |
 | IT06 | Publicação em servidor da instituição | Média | Definir onde o sistema será hospedado |
 | IT07 | Confirmar campo Quarto como obrigatório | Baixa | Ver `requisitos.md`, seção 6 |
+| IT10 | Adquirir leitor de código de barras USB 2D, modo HID | Alta | Bloqueia a validação prática da US23. Leitores apenas 1D não leem DataMatrix e não atendem ao requisito de lote e validade |
+| IT11 | Verificar se as caixas recebidas trazem DataMatrix | Alta | Pergunta para a instituição. Define se lote e validade poderão ser capturados automaticamente ou terão de ser digitados |
+| IT12 | Avaliar a lista de preços da CMED como fonte de dados de medicamentos | Média | Confirmar se traz GTIN, formato e periodicidade. Importação para o banco local, nunca consulta em tempo de uso |
 | IT08 | Definir com o orientador se o uso de IA será declarado no trabalho | Alta | Decide o item IT09; algumas instituições exigem declaração formal |
 | IT09 | Limpeza das marcações de atribuição antes da entrega final | Baixa | Depende de IT08. Envolve reescrever as mensagens de commit, mesclar a branch de desenvolvimento na `main` e remover o `CLAUDE.md`. Exige reescrita de histórico, portanto deve ser feita **depois** do último commit e antes de o repositório ser compartilhado |
 

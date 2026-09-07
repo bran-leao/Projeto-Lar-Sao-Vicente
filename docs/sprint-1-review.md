@@ -267,9 +267,23 @@ refinamento do backlog.
 8. **Contas de acesso.** Cada funcionário terá conta individual, ou há postos de trabalho
    compartilhados? *(Isso afeta diretamente o registro de responsável.)*
 
-> A pergunta 7 é a mais importante da reunião: ela **bloqueia** a próxima Sprint. Sem
-> saber quem pode fazer o quê, não há como construir o controle de medicamentos com
-> registro de responsável.
+### Sobre o módulo de medicamentos
+
+Acrescentadas após a repriorização: a Sprint 2 passou a ser o catálogo de medicamentos,
+e não o cadastro de usuários.
+
+9. **As caixas que vocês recebem têm o quadradinho 2D (DataMatrix), ou só o código de
+   barras tradicional?** Peça para olharem algumas caixas na despensa, de compra e de
+   doação.
+10. **Como chega uma doação?** Caixa lacrada, cartela avulsa, frasco já aberto?
+11. **Vocês controlam lote e validade hoje?** Em papel, planilha, ou não há controle?
+12. **Quem recebe a doação fisicamente** é a mesma pessoa que administra o medicamento?
+13. **A instituição tem farmacêutico responsável?**
+
+> Duas perguntas decidem o rumo do trabalho. A **7** continua sendo a mais importante do
+> projeto: sem saber quem pode fazer o quê, não há como registrar quem administrou cada
+> dose. A **9** define o desenho da Sprint 3: se as caixas trouxerem DataMatrix, lote e
+> validade vêm de graça na leitura; se não, terão de ser digitados a cada entrada.
 
 ---
 

@@ -29,6 +29,11 @@ Sprints de **7 dias**, com entrega aos **sábados**. Calendário em `docs/sprint
 
 Situação atual: **Sprint 1 concluída** (US01 a US07), entrega em 12/09/2026.
 
+Próxima Sprint: **catálogo de medicamentos com leitura de código de barras** (US09, US23
+e US24). A ordem foi repriorizada após a Sprint 1 — ver `docs/product-backlog.md`. O
+desenho do módulo está em `docs/arquitetura.md`, seção 5.1: **o sistema não depende de
+API externa** para identificar medicamentos; o catálogo se constrói pelo uso.
+
 ## Tecnologias — não altere sem justificar
 
 | Item | Versão |
