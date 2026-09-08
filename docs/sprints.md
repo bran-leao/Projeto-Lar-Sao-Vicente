@@ -91,9 +91,9 @@ dependência de ordem entre os testes.
 
 ## Defeitos encontrados e corrigidos durante a Sprint
 
-Registrados por serem material relevante para a discussão de qualidade no TCC. Os quatro
-primeiros só apareceram ao **executar** a aplicação; não seriam percebidos apenas lendo
-o código ou compilando.
+Registrados por serem material relevante para a discussão de qualidade no TCC. **Cinco
+dos sete só apareceram ao executar a aplicação**; nenhum deles seria percebido lendo o
+código ou compilando.
 
 | # | Defeito | Causa | Correção |
 |---|---------|-------|----------|
@@ -102,9 +102,34 @@ o código ou compilando.
 | 3 | Barra lateral encolhia em telas com conteúdo largo | Item flex com `flex-shrink` padrão | `flex: 0 0 260px` |
 | 4 | Validação do formulário de login inoperante | O layout de login não carregava o jQuery exigido pelos scripts de validação | jQuery incluído antes dos scripts de validação |
 | 5 | **Possível gravação sobre o cadastro de outro residente** | No ASP.NET Core, o provedor de valores de formulário tem precedência sobre o de rota: o parâmetro `id` era preenchido pelo campo oculto enviado pelo navegador | `[FromRoute]` nas ações, com teste de regressão |
+| 6 | Contagem de testes incorreta nesta documentação | Erro de contagem manual ao redigir. O total de 48 estava certo; a divisão entre os grupos, não | Tabela corrigida e demais fatos verificáveis auditados |
+| 7 | Cadeia de conexão de desenvolvimento no arquivo de produção | O `appsettings.json` guarda a configuração de produção, mas era ele que precisava ser editado para rodar localmente | Cadeia movida para `appsettings.Development.json`, apontando para LocalDB |
 
 O defeito 5 é o mais relevante: era uma falha de segurança real, encontrada por um teste
 de integração escrito justamente para verificar essa hipótese.
+
+## Primeira execução em máquina de desenvolvimento
+
+Em 08/09/2026 o sistema foi executado pela primeira vez em uma máquina de
+desenvolvimento independente daquela em que foi construído — Windows, Visual Studio 2026
+e LocalDB —, e respondeu corretamente.
+
+O procedimento revelou três obstáculos que a documentação não cobria, todos corrigidos:
+
+1. **A branch.** O `README.md` não avisava que a `main` contém apenas o próprio README.
+   Quem clonasse sem indicar a branch de desenvolvimento encontraria o projeto
+   aparentemente vazio, sem explicação.
+2. **O escape da barra invertida.** Escrever `Server=.\SQLEXPRESS` com uma única barra
+   torna o `appsettings.json` ilegível, e a aplicação encerra com
+   `InvalidDataException` antes de tentar conectar ao banco. A mensagem não menciona a
+   cadeia de conexão, o que dificulta associar a causa.
+3. **O arquivo errado.** A configuração que precisava ser editada era a de produção
+   (defeito 7). Além do risco de quebrá-la, isso levaria o nome do servidor local de
+   cada integrante para dentro do repositório.
+
+O episódio confirma o aprendizado registrado abaixo: **executar em outra máquina revela
+o que executar na própria não revela**. Nenhum dos três apareceu durante o
+desenvolvimento, porque o ambiente de construção já estava configurado.
 
 ## Sprint Review
 
@@ -122,6 +147,10 @@ Resultado da reunião: *a preencher após a Review.*
   revelou que a presunção estava errada e que havia uma falha de segurança.
 - **O padrão do framework nem sempre é o esperado.** A precedência do formulário sobre a
   rota na vinculação de parâmetros é documentada, mas contraintuitiva.
+- **Executar em outra máquina revela o que executar na própria não revela.** Três
+  obstáculos de instalação só apareceram quando alguém clonou o repositório do zero, em
+  ambiente não preparado. A documentação de instalação só se prova acompanhando alguém
+  que a siga pela primeira vez.
 
 ## Próxima Sprint
 

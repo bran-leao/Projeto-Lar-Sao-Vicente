@@ -96,6 +96,7 @@ Não são funcionalidades para o usuário, mas precisam ser considerados no plan
 | IT04 | Paginação da listagem de residentes | Média | Com 86 residentes a listagem atual é utilizável, mas crescerá |
 | IT05 | Filtro por situação na listagem | Média | Sugerido a partir do uso; confirmar necessidade com a instituição |
 | IT06 | Publicação em servidor da instituição | Média | Definir onde o sistema será hospedado |
+| IT13 | Acompanhar a instalação feita por outro integrante da equipe | Média | A primeira execução em máquina independente revelou três obstáculos que a documentação não cobria. Repetir o procedimento com outra pessoa é a única forma de validar o README |
 | IT07 | Confirmar campo Quarto como obrigatório | Baixa | Ver `requisitos.md`, seção 6 |
 | IT10 | Adquirir leitor de código de barras USB 2D, modo HID | Alta | Bloqueia a validação prática da US23. Leitores apenas 1D não leem DataMatrix e não atendem ao requisito de lote e validade |
 | IT11 | Verificar se as caixas recebidas trazem DataMatrix | Alta | Pergunta para a instituição. Define se lote e validade poderão ser capturados automaticamente ou terão de ser digitados |
