@@ -68,6 +68,19 @@ Edite `src/LarSaoVicente.Web/appsettings.json` e ajuste o nome do servidor:
 }
 ```
 
+> **Atenção às barras invertidas.** No JSON, a barra invertida inicia uma sequência de
+> escape, e `\S` não é válida. O arquivo deixa de ser lido e a aplicação encerra com
+> `System.IO.InvalidDataException: Failed to load configuration from file ... appsettings.json`,
+> antes mesmo de tentar conectar ao banco.
+>
+> | | |
+> |---|---|
+> | ❌ Errado | `"Server=.\SQLEXPRESS;..."` |
+> | ✅ Correto | `"Server=.\\SQLEXPRESS;..."` |
+>
+> A instância padrão dispensa barras: `"Server=localhost;..."`. Se o arquivo quebrar,
+> restaure-o com `git checkout src/LarSaoVicente.Web/appsettings.json` e edite novamente.
+
 Para descobrir o nome da sua instância, execute no SQL Server Management Studio:
 
 ```sql
