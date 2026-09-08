@@ -60,13 +60,24 @@ instância nomeada, usada como `.\NOME`. Se nada aparecer, verifique o LocalDB c
 
 ### 2. Configurar a conexão com o banco
 
-Edite `src/LarSaoVicente.Web/appsettings.json` e ajuste o nome do servidor:
+**Se você usa LocalDB** — o banco que acompanha o Visual Studio — não é preciso
+configurar nada. O arquivo `appsettings.Development.json` já aponta para
+`(localdb)\\MSSQLLocalDB`, e é ele que vale quando o projeto roda em desenvolvimento.
+Siga para o passo 3.
+
+**Se você usa outra instância**, ajuste o servidor em
+`src/LarSaoVicente.Web/appsettings.Development.json`, e não no `appsettings.json`:
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=.\\SQLEXPRESS;Database=LarSaoVicente;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+  "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=LarSaoVicente;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
 }
 ```
+
+> **Por que dois arquivos.** O `appsettings.json` guarda a configuração de produção,
+> voltada ao SQL Server da instituição. O `appsettings.Development.json` a sobrepõe
+> enquanto o projeto roda na máquina do desenvolvedor. Assim, o nome do servidor local
+> de cada integrante não é enviado ao repositório junto com o restante do código.
 
 > **Atenção às barras invertidas.** No JSON, a barra invertida inicia uma sequência de
 > escape, e `\S` não é válida. O arquivo deixa de ser lido e a aplicação encerra com
@@ -79,7 +90,8 @@ Edite `src/LarSaoVicente.Web/appsettings.json` e ajuste o nome do servidor:
 > | ✅ Correto | `"Server=.\\SQLEXPRESS;..."` |
 >
 > A instância padrão dispensa barras: `"Server=localhost;..."`. Se o arquivo quebrar,
-> restaure-o com `git checkout src/LarSaoVicente.Web/appsettings.json` e edite novamente.
+> restaure-o com `git checkout src/LarSaoVicente.Web/appsettings.Development.json` e edite
+> novamente.
 
 Para descobrir o nome da sua instância, execute no SQL Server Management Studio:
 
@@ -91,6 +103,7 @@ Exemplos conforme a instalação:
 
 | Instalação | Servidor |
 |------------|----------|
+| LocalDB, instalado com o Visual Studio | `(localdb)\MSSQLLocalDB` |
 | SQL Server Express | `.\SQLEXPRESS` |
 | Instância padrão | `localhost` ou `.` |
 | Instância nomeada | `.\NOME_DA_INSTANCIA` |
