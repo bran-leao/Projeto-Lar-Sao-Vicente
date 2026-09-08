@@ -36,7 +36,29 @@ Identity · Bootstrap 5.3 · xUnit
 
 ## Como executar
 
-### 1. Configurar a conexão com o banco
+### 1. Clonar o repositório
+
+O desenvolvimento acontece na branch `claude/tcc-project-96i658`. A branch `main`
+contém apenas este README.
+
+```bash
+git clone -b claude/tcc-project-96i658 https://github.com/bran-leao/Projeto-Lar-Sao-Vicente.git
+cd Projeto-Lar-Sao-Vicente
+```
+
+> Clonar sem o parâmetro `-b` traz a `main`, e o projeto parecerá vazio.
+
+Para descobrir qual instância do SQL Server existe na máquina, no PowerShell:
+
+```powershell
+Get-Service | Where-Object { $_.Name -like 'MSSQL*' } | Select-Object Name, Status
+```
+
+`MSSQLSERVER` indica instância padrão, usada como `localhost`. `MSSQL$NOME` indica
+instância nomeada, usada como `.\NOME`. Se nada aparecer, verifique o LocalDB com
+`sqllocaldb info`.
+
+### 2. Configurar a conexão com o banco
 
 Edite `src/LarSaoVicente.Web/appsettings.json` e ajuste o nome do servidor:
 
@@ -71,7 +93,7 @@ dotnet user-secrets init
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=...;User Id=...;Password=..."
 ```
 
-### 2. Definir o usuário administrador
+### 3. Definir o usuário administrador
 
 O arquivo `appsettings.Development.json` já traz um administrador para desenvolvimento:
 
@@ -83,7 +105,7 @@ O arquivo `appsettings.Development.json` já traz um administrador para desenvol
 > Credencial exclusiva de desenvolvimento. **Nunca** utilize em produção: defina outra
 > pela seção `Seed:Administrator` ou por variáveis de ambiente.
 
-### 3. Executar
+### 4. Executar
 
 ```bash
 dotnet run --project src/LarSaoVicente.Web
@@ -97,8 +119,14 @@ Acesse o endereço exibido no terminal (por padrão `https://localhost:7xxx`).
 
 ### Executar pelo Visual Studio
 
-Abra `LarSaoVicente.sln`, defina `LarSaoVicente.Web` como projeto de inicialização e
-pressione F5.
+Abra `LarSaoVicente.sln`, clique com o botão direito em `LarSaoVicente.Web` e escolha
+**Definir como projeto de inicialização** — a solução tem quatro projetos, e o Visual
+Studio pode selecionar outro. Em seguida, pressione F5.
+
+Na primeira execução o Visual Studio pede para confiar no certificado HTTPS de
+desenvolvimento. Aceite: ele vale apenas na máquina local.
+
+A aplicação abre em `https://localhost:7102`.
 
 ## Testes
 
