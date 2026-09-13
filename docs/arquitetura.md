@@ -321,6 +321,112 @@ A restrição por perfil entra junto com a US08, e a conferência é um dos caso
 tornam necessária: liberar medicamento para uso é decisão de responsabilidade técnica,
 não operacional.
 
+## 5.3 O que os dados reais da instituição impõem à modelagem
+
+As seções 5.1 e 5.2 foram desenhadas antes de conhecer as planilhas em uso. A inspeção
+descrita em `requisitos.md`, seção 2.1, confirmou parte do desenho e obrigou a corrigir
+outra parte. Esta seção registra o que mudou e por quê.
+
+### Insumo não é medicamento
+
+A instituição mantém luvas, fraldas, lancetas e materiais de procedimento em aba
+separada dos medicamentos. A distinção é da própria equipe, não uma invenção do sistema,
+e ignorá-la faria a listagem de medicamentos misturar coisas que ninguém procura juntas.
+
+O catálogo prevê uma **categoria** que separa medicamento de insumo. Um único cadastro
+com categoria é preferível a dois módulos: a entrada, a conferência, o estoque e o
+alerta de vencimento são idênticos para os dois casos, e duplicar as telas duplicaria
+também os defeitos. Confirmar antes da Sprint 2 se insumos entram nesta fase
+(`requisitos.md`, seção 6, pergunta 14).
+
+### A apresentação vem embutida no nome
+
+Nas planilhas, um item é uma única linha de texto: `NOME 100MG C/ 30CP` — princípio
+ativo, concentração e quantidade por embalagem no mesmo campo.
+
+Isso não é erro da equipe; é o que uma planilha permite. Mas impede qualquer pesquisa
+útil: não há como listar tudo de 100 mg, nem somar caixas de apresentações diferentes do
+mesmo princípio ativo.
+
+O catálogo separa em campos distintos:
+
+| Campo | Exemplo | Observação |
+|-------|---------|------------|
+| Nome comercial | `AAS` | Obrigatório |
+| Princípio ativo | `Ácido acetilsalicílico` | Obrigatório — é o que permite reconhecer o mesmo medicamento entre marcas |
+| Concentração | `100 mg` | Obrigatório |
+| Forma farmacêutica | comprimido | Obrigatório |
+| Quantidade por embalagem | `30` | Obrigatório |
+| Unidade | comprimido | Obrigatório |
+
+A importação inicial precisará **quebrar** o texto das planilhas nesses campos. Isso não
+é totalmente automatizável: o formato varia entre linhas, e um palpite errado sobre
+concentração é risco clínico. A separação é sugerida pelo sistema e **confirmada por
+pessoa** antes de gravar — a mesma lógica da conferência de entradas da seção 5.2.
+
+### Unidade de medida é campo obrigatório
+
+As planilhas usam comprimido, caixa, frasco, tubo, sachê, fardo, caixa master e unidade.
+"30" sem unidade não significa nada: pode ser trinta comprimidos ou trinta caixas.
+
+O campo é obrigatório e vem de uma lista fechada (`enum`), não de texto livre. Texto
+livre reproduziria no sistema exatamente o problema das planilhas: `CX`, `Cx`, `caixa` e
+`Caixas` como quatro coisas diferentes para o banco e a mesma coisa para a pessoa.
+
+### Cinco origens, não duas
+
+O desenho anterior previa compra e doação. As planilhas mostram cinco caminhos reais:
+**distribuidora, Farmácia Popular, posto de saúde (UBS), família do residente e doação**.
+
+A distinção importa além do registro: medicamento trazido pela família pertence àquele
+residente e não deve ser consumido por outro; medicamento da Farmácia Popular e da UBS
+tem prazo de retirada e pode faltar; medicamento de doação é o que mais chega perto do
+vencimento. São regras diferentes sobre a mesma entrada, e só existem se a origem for um
+campo, não uma observação.
+
+### Uso contínuo e uso "se necessário"
+
+A planilha marca de amarelo a linha do medicamento SOS. É informação clínica relevante
+guardada como cor: some ao copiar, não aparece em pesquisa e não é legível por quem tem
+dificuldade de distinguir cores.
+
+No sistema, é um campo do vínculo entre medicamento e residente (US11), não do catálogo:
+o mesmo medicamento é contínuo para uma pessoa e "se necessário" para outra.
+
+### Condições especiais de armazenamento
+
+A insulina é destacada em cor própria, o que indica tratamento diferenciado — refrigeração
+e um procedimento próprio de administração. O catálogo prevê a marcação de **conservação
+refrigerada**, porque ela muda onde o item é guardado e o que acontece se faltar energia.
+
+### Alertas clínicos
+
+A planilha mais completa traz observações do tipo "risco de quedas" e "vigilância
+redobrada" ao lado de certos medicamentos.
+
+Esse conteúdo é **dado pessoal sensível de saúde** e acompanha o vínculo com o residente,
+nunca o catálogo. Entra junto com a US11, depois dos perfis de acesso (US08) — pela mesma
+razão já registrada no `product-backlog.md`.
+
+### Importação do catálogo inicial
+
+Estratégia recomendada, em ordem de risco crescente:
+
+1. **Catálogo geral do ano** (colunas medicação e quantidade) como base. É a planilha
+   mais limpa e **não contém dado pessoal algum** — pode ser trabalhada sem qualquer
+   cuidado especial de privacidade.
+2. **Plano de controle geral**, usado apenas para enriquecer com o princípio ativo.
+   Descarta-se a coluna do residente **antes** de o arquivo sair do computador da
+   instituição, e ficam apenas as duas colunas de medicamento, sem repetições. O
+   resultado é um catálogo com princípio ativo e sem nenhum dado pessoal.
+3. **Nada de listagens por residente** nesta fase. São dados de saúde e dependem dos
+   perfis de acesso.
+4. **Nada de histórico de compras.** É informação administrativa, fora do escopo.
+
+A importação é um utilitário de carga inicial, executado uma vez, com revisão humana
+antes da gravação. Não é funcionalidade permanente do sistema, e por isso não deve virar
+tela de uso corrente.
+
 ## 6. Organização de pastas
 
 ```

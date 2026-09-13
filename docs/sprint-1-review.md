@@ -289,6 +289,33 @@ e não o cadastro de usuários.
 > dose. A **9** define o desenho da Sprint 3: se as caixas trouxerem DataMatrix, lote e
 > validade vêm de graça na leitura; se não, terão de ser digitados a cada entrada.
 
+### Sobre as planilhas que vocês usam hoje
+
+Acrescentadas depois de inspecionar as planilhas em uso. Levantamento completo em
+`requisitos.md`, seção 2.1.
+
+16. **Qual planilha é a que vale?** Encontramos mais de uma com o mesmo propósito e
+    conteúdos diferentes, além de arquivos iguais em pastas diferentes. Precisamos saber
+    qual vocês consideram a correta hoje.
+17. **Achamos uma divergência e não sabemos resolver sozinhos.** Um mesmo residente
+    aparece em duas planilhas com formulações diferentes do mesmo medicamento — uma
+    simples e outra de liberação prolongada, que não são a mesma coisa. Qual está certa?
+18. **Luvas, fraldas e lancetas entram no sistema?** Hoje vocês controlam isso em aba
+    separada dos medicamentos. Devem virar uma categoria dentro do mesmo cadastro, um
+    módulo próprio, ou ficam de fora por enquanto?
+19. **Existe cópia de segurança dessas planilhas em algum outro lugar?**
+
+> A **17** é a pergunta a fazer com a planilha na tela, se houver oportunidade. Ela
+> mostra, com o dado da própria instituição, por que um sistema resolve algo que a
+> planilha não resolve: hoje duas fontes discordam sobre o medicamento de uma pessoa e
+> não há como saber qual está certa.
+>
+> A **19** não é sobre o sistema, e é a mais urgente das quatro. As planilhas estão em um
+> único computador, sem indício de backup. Vale dizer isso em voz alta na reunião,
+> independentemente do projeto — assim como vale comentar que os nomes completos dos
+> residentes aparecem nos nomes dos arquivos, visíveis a qualquer um que abra a pasta
+> compartilhada.
+
 ---
 
 ## 4. Registro do feedback
