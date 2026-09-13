@@ -16,6 +16,12 @@ residente → separação → administração → registro do responsável.
 
 Documentação completa em `docs/`. Comece por `docs/requisitos.md`.
 
+O levantamento do ambiente atual da instituição — as planilhas em uso, o vocabulário
+próprio da equipe e as divergências encontradas nos dados — está em `docs/requisitos.md`,
+seção 2.1, e as consequências para a modelagem em `docs/arquitetura.md`, seção 5.3.
+**Nunca registre em código, documentação ou relatórios os nomes de residentes que
+aparecem nessas planilhas.**
+
 ## Metodologia
 
 O projeto segue **Scrum**, com Sprints que produzem incrementos funcionais e

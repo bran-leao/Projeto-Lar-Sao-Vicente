@@ -52,6 +52,7 @@ As estimativas em Sprints são preliminares e serão revistas no refinamento.
 | US09 | Como funcionário autorizado, quero cadastrar medicamentos, para que possam ser controlados pelo sistema | US01 | meia Sprint |
 | US23 | Como funcionário autorizado, quero identificar um medicamento lendo o código de barras da caixa, para não precisar procurá-lo digitando | US09 | meia Sprint |
 | US24 | Como funcionário autorizado, quero pesquisar o catálogo por nome comercial ou princípio ativo, para localizar um medicamento mesmo sem a caixa em mãos | US09 | pequena |
+| US28 | Como funcionário autorizado, quero carregar no catálogo os medicamentos que já constam nas planilhas da instituição, para não recomeçar o cadastro do zero | US09, IT14, IT15 | meia Sprint |
 | US26 | Como funcionário autorizado, quero registrar manualmente um medicamento que chegou sem caixa ou sem código, para que ele não fique fora do controle | US09, US10 | meia Sprint |
 | US27 | Como responsável pela conferência, quero revisar as entradas pendentes e liberá-las ou recusá-las, para que apenas medicamento verificado entre no estoque | US26 | meia Sprint |
 | US25 | Como funcionário autorizado, quero ser avisado dos medicamentos próximos do vencimento, para consumi-los antes de perder | US10 | pequena |
@@ -101,6 +102,10 @@ Não são funcionalidades para o usuário, mas precisam ser considerados no plan
 | IT10 | Adquirir leitor de código de barras USB 2D, modo HID | Alta | Bloqueia a validação prática da US23. Leitores apenas 1D não leem DataMatrix e não atendem ao requisito de lote e validade |
 | IT11 | Verificar se as caixas recebidas trazem DataMatrix | Alta | Pergunta para a instituição. Define se lote e validade poderão ser capturados automaticamente ou terão de ser digitados |
 | IT12 | Avaliar a lista de preços da CMED como fonte de dados de medicamentos | Média | Confirmar se traz GTIN, formato e periodicidade. Importação para o banco local, nunca consulta em tempo de uso |
+| IT14 | Obter cópia das planilhas já sem a coluna de residente | Alta | Bloqueia a US28. A remoção precisa ser feita **no computador da instituição**, antes de o arquivo sair de lá: só devem circular as colunas de medicamento e princípio ativo |
+| IT15 | Definir com a instituição qual planilha é a fonte da verdade | Alta | Bloqueia a US28. Ver `requisitos.md`, seção 6, perguntas 12 e 13. Sem essa definição, importar significa escolher arbitrariamente entre registros que se contradizem |
+| IT16 | Alertar a instituição sobre backup e exposição de dado pessoal na pasta de rede | Alta | Não depende do sistema e não pode esperar por ele. Não há evidência de cópia de segurança, e nomes completos de residentes aparecem nos nomes dos arquivos, visíveis a quem apenas lista a pasta |
+| IT17 | Definir se insumos entram no sistema | Alta | Ver `requisitos.md`, seção 6, pergunta 14. Muda a modelagem do catálogo, portanto precisa ser respondida antes da Sprint 2 |
 | IT08 | Definir com o orientador se o uso de IA será declarado no trabalho | Alta | Decide o item IT09; algumas instituições exigem declaração formal |
 | IT09 | Limpeza das marcações de atribuição antes da entrega final | Baixa | Depende de IT08. Envolve reescrever as mensagens de commit, mesclar a branch de desenvolvimento na `main` e remover o `CLAUDE.md`. Exige reescrita de histórico, portanto deve ser feita **depois** do último commit e antes de o repositório ser compartilhado |
 
@@ -129,3 +134,28 @@ Review:
   86 registros, mas convém resolver antes que o histórico de inativos cresça.
 - **Reativação de residente**. Implementada na Sprint 1 como contrapartida da inativação.
   Confirmar se deve ser restrita a determinado perfil.
+
+## Itens levantados na inspeção das planilhas
+
+Em setembro de 2026 foram inspecionadas as planilhas que a instituição usa hoje. O
+levantamento está em `requisitos.md`, seção 2.1, e as consequências para a modelagem em
+`arquitetura.md`, seção 5.3. O que ele acrescentou ao backlog:
+
+- **Importação do catálogo inicial (US28).** A instituição já tem uma lista de
+  medicamentos. Recomeçar do zero seria desperdiçar trabalho feito e, pior, deixar o
+  sistema vazio na demonstração. A US28 fica **bloqueada** por IT14 e IT15: sem uma cópia
+  sem dado pessoal e sem saber qual planilha é a correta, importar significa escolher
+  arbitrariamente entre registros que se contradizem.
+- **A modelagem do catálogo mudou antes de ser escrita.** As planilhas mostraram cinco
+  origens de medicamento onde o desenho previa duas, unidade de medida como campo
+  obrigatório, apresentação embutida no nome e a distinção entre insumo e medicamento.
+  Todos entram na US09, e nenhum é acréscimo de escopo: são o dado real que a US09 já
+  precisava representar.
+- **Riscos que não dependem do sistema (IT16).** Não há evidência de cópia de segurança
+  das planilhas, e nomes completos de residentes aparecem nos nomes dos arquivos em uma
+  pasta de rede. Nada disso é resolvido pelo projeto, e nada disso deveria esperar por
+  ele. Levar à Review.
+- **Argumento para a Review.** Duas planilhas registram o medicamento do mesmo residente
+  de formas diferentes, e uma delas indica formulação de liberação prolongada — que não é
+  intercambiável com a simples. Nenhuma das duas pode ser considerada mais confiável.
+  Esse caso demonstra, com o dado da própria instituição, por que a fonte única importa.
