@@ -167,9 +167,52 @@ Tabelas do Identity criadas pela migration inicial: `AspNetUsers`, `AspNetRoles`
 `AspNetUserRoles`, `AspNetUserClaims`, `AspNetUserLogins`, `AspNetUserTokens`,
 `AspNetRoleClaims`.
 
+### Implementado na Sprint 2 — catálogo
+
+```
+┌──────────────────────────────────────┐
+│ Medicamentos                         │
+├──────────────────────────────────────┤
+│ Id                       (GUID)      │
+│ CommercialName           (150)       │  obrigatório
+│ ActiveIngredient         (150, nulo) │  obrigatório se categoria = Medicamento
+│ Strength                 (60, nulo)  │  texto: "100 mg", "2 mg + 5 mg", "0,004 mg/mL"
+│ Form                     (int, nulo) │  obrigatório se categoria = Medicamento
+│ UnitsPerPackage          (int, nulo) │  1 a 10.000
+│ PackageUnit              (int)       │  obrigatório
+│ Barcode                  (14, nulo)  │  índice único, admite vários nulos
+│ Category                 (int)       │  Medicamento | Insumo
+│ Status                   (int)       │  Ativo | Inativo
+│ Notes                    (1000, nulo)│
+│ NormalizedSearchKey      (300)       │  derivado; índice não único
+│ + campos de AuditableEntity          │
+└──────────────────────────────────────┘
+```
+
+Cada decisão abaixo veio de uma contagem sobre os 144 itens do catálogo real da
+instituição, não de suposição.
+
+| Decisão | O que o dado mostrou |
+|---------|----------------------|
+| `Strength` é texto, não número com unidade | Aparecem associações de dois fármacos, proporções por mililitro e unidades internacionais. Estruturar obrigaria a recusar o cadastro ou adivinhar — e adivinhar concentração é risco clínico |
+| `Strength` é opcional | 28 dos 144 itens não trazem concentração no nome (`ÁCIDO FÓLICO C/ 30CP`, `COMPLEXO B`, colírios) |
+| `UnitsPerPackage` é opcional | 17 itens não informam quantidade por embalagem — colírios, gotas e um inalador |
+| `PackageUnit` é obrigatório e de lista fechada | A planilha registra "17CX" e "1FR". Trinta sem unidade não significa nada |
+| `ActiveIngredient` é obrigatório só para medicamento | Luva e fralda não são fármacos. Exigir o campo obrigaria a equipe a inventar um valor |
+| `Barcode` é opcional, com índice único | Cartela avulsa de doação frequentemente não tem código. O índice único do SQL Server admite vários nulos |
+| `NormalizedSearchKey` existe | 14 itens estão gravados em duas grafias que diferem só por um espaço ou um ponto: `Losartana 50 mg` e `Losartana 50mg`, `Vitamina D 7.000 UI` e `Vitamina D 7000 UI` |
+
+**A chave de busca não é única.** O mesmo medicamento de laboratórios diferentes gera
+registros distintos, o que é correto para rastreabilidade. A chave serve para localizar
+e para **avisar** sobre um provável duplicado, nunca para impedir o cadastro.
+
+**Validação do código de barras.** `Gtin.IsValid` aceita EAN-8, UPC-A, EAN-13 e DUN-14 —
+todos da mesma família e com o mesmo dígito verificador. A conferência acontece antes de
+qualquer consulta ao banco e sem depender de rede, conforme a seção 5.1.
+
 ### Previsto para as próximas Sprints
 
-Ainda **não implementado**. Registrado para orientar o desenho das próximas entregas.
+Ainda **não implementado**, com exceção de `Medication`, descrito acima. Registrado para orientar o desenho das próximas entregas.
 
 O fluxo de medicamentos exige **quatro entidades distintas**. Reuni-las em uma única
 tabela "Medicamentos" é o erro de modelagem mais comum nesse tipo de sistema e
@@ -395,9 +438,15 @@ o mesmo medicamento é contínuo para uma pessoa e "se necessário" para outra.
 
 ### Condições especiais de armazenamento
 
-A insulina é destacada em cor própria, o que indica tratamento diferenciado — refrigeração
-e um procedimento próprio de administração. O catálogo prevê a marcação de **conservação
-refrigerada**, porque ela muda onde o item é guardado e o que acontece se faltar energia.
+A insulina é destacada em cor própria nas planilhas, o que sugere tratamento
+diferenciado — refrigeração e procedimento próprio de administração.
+
+**Não confirmado.** A leitura da cor é interpretação nossa, não dado. As 365 linhas do
+plano consolidado não mencionam refrigeração nem geladeira uma única vez. A marcação de
+conservação refrigerada **não foi implementada** no catálogo: acrescentar campo pessoal
+ou operacional sem necessidade concreta contraria a minimização de dados que o projeto
+adotou. Fica como pergunta para a instituição — se houver item que exija geladeira, o
+campo entra depois, com a razão registrada.
 
 ### Alertas clínicos
 
