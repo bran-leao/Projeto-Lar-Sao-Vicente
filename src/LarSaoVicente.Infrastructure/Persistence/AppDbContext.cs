@@ -31,6 +31,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Resident> Residents => Set<Resident>();
 
+    public DbSet<Medication> Medications => Set<Medication>();
+
+    public DbSet<MedicationEntry> MedicationEntries => Set<MedicationEntry>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
