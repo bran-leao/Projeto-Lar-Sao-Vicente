@@ -160,7 +160,7 @@ A aplicação abre em `https://localhost:7102`.
 dotnet test
 ```
 
-138 testes: 104 unitários das regras de domínio e 34 de integração que exercitam a
+165 testes: 104 unitários das regras de domínio e 61 de integração que exercitam a
 aplicação real de ponta a ponta.
 
 Os testes de integração usam **SQLite em memória** e não exigem SQL Server instalado.
