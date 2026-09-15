@@ -17,8 +17,8 @@ permanece obrigatória antes das US11 e US12.
 
 | Sprint | Entrega | Escopo previsto |
 |--------|---------|-----------------|
-| 2 | 19/09/2026 | US09, US23, US24 — catálogo de medicamentos e leitura de código de barras |
-| 3 | 26/09/2026 | US10, US26, US27, US25 — entrada com lote, validade e origem; registro manual sem código; conferência; alerta de vencimento |
+| 2 | 19/09/2026 | **Entregue:** US09, US23, US24, US10, US26 e US27 — catálogo, leitura de código, entrada com quantidade e conferência |
+| 3 | 26/09/2026 | US25 e US28 — alerta de vencimento e importação das planilhas; a confirmar no Planning |
 | 4 | 03/10/2026 | US08 — usuários e perfis de acesso |
 | 5 | 10/10/2026 | US11 — vínculo entre medicamento e residente |
 | 6 | 17/10/2026 | US12 — registro da administração, com responsável |
@@ -28,6 +28,21 @@ Datas conforme a cadência semanal. O escopo de cada Sprint é confirmado no res
 Sprint Planning, à luz do feedback da Review anterior.
 
 Legenda: **Concluído** · **Em andamento** · **Pendente**
+
+## Sprint 2 — Catálogo, leitura de código e entrada · Concluído
+
+| ID | User Story | Situação |
+|----|------------|----------|
+| US09 | Cadastrar medicamentos, para que possam ser controlados pelo sistema | Concluído |
+| US23 | Identificar um medicamento lendo o código da caixa | Concluído |
+| US24 | Pesquisar o catálogo por nome comercial ou princípio ativo | Concluído |
+| US10 | Registrar a entrada, com origem, lote e validade | Concluído |
+| US26 | Registrar manualmente quando o código está ausente ou danificado, informando de uma vez quantas unidades chegaram | Concluído |
+| US27 | Revisar as entradas pendentes e liberá-las ou recusá-las | Concluído |
+
+US10, US26 e US27 estavam previstas para a Sprint 3 e foram antecipadas a pedido do
+Product Owner: sem a entrada, o catálogo não responde "quanto temos". As três dividem a
+mesma tela, e separá-las obrigaria a construí-la duas vezes.
 
 ## Sprint 1 — Base do sistema · Concluído
 
@@ -49,22 +64,17 @@ As estimativas em Sprints são preliminares e serão revistas no refinamento.
 
 | ID | User Story | Depende de | Estimativa |
 |----|------------|-----------|------------|
-| US09 | Como funcionário autorizado, quero cadastrar medicamentos, para que possam ser controlados pelo sistema | US01 | meia Sprint |
-| US23 | Como funcionário autorizado, quero identificar um medicamento lendo o código de barras da caixa, para não precisar procurá-lo digitando | US09 | meia Sprint |
-| US24 | Como funcionário autorizado, quero pesquisar o catálogo por nome comercial ou princípio ativo, para localizar um medicamento mesmo sem a caixa em mãos | US09 | pequena |
 | US28 | Como funcionário autorizado, quero carregar no catálogo os medicamentos que já constam nas planilhas da instituição, para não recomeçar o cadastro do zero | US09, IT14, IT15 | meia Sprint |
-| US26 | Como funcionário autorizado, quero registrar manualmente um medicamento cujo código está ausente ou danificado, informando de uma vez quantas unidades chegaram, para não repetir o cadastro unidade por unidade | US09, US10 | meia Sprint |
-| US27 | Como responsável pela conferência, quero revisar as entradas pendentes e liberá-las ou recusá-las, para que apenas medicamento verificado entre no estoque | US26 | meia Sprint |
 | US25 | Como funcionário autorizado, quero ser avisado dos medicamentos próximos do vencimento, para consumi-los antes de perder | US10 | pequena |
 | US08 | Como administrador, quero cadastrar usuários e definir seus perfis, para que cada funcionário acesse apenas o que lhe compete | US01 | 1 Sprint |
-| US10 | Como funcionário autorizado, quero registrar a entrada de medicamentos, identificando a origem, inclusive doações, e informando lote e validade, para controlar o que chega à instituição | US09 | 1 Sprint |
 | US11 | Como funcionário autorizado, quero vincular medicamentos a um residente, para saber a quem cada medicamento se destina | US09, **US08** | 1 Sprint |
 | US12 | Como profissional responsável, quero registrar a administração de um medicamento, para que fique documentado quem administrou, o quê e quando | US11 | 1 Sprint |
 | US13 | Como funcionário autorizado, quero consultar o estoque de medicamentos, para saber o que há disponível e o que está por acabar | US10 | 1 Sprint |
 
 > US09 a US13 compõem, juntas, o fluxo de rastreabilidade que é a principal dor
 > relatada: entrada → armazenamento → identificação → vinculação ao residente →
-> separação → administração → registro do responsável.
+> separação → administração → registro do responsável. **As três primeiras etapas —
+> entrada, armazenamento e identificação — foram entregues na Sprint 2.**
 
 ### Prioridade média
 
@@ -99,7 +109,7 @@ Não são funcionalidades para o usuário, mas precisam ser considerados no plan
 | IT06 | Publicação em servidor da instituição | Média | Definir onde o sistema será hospedado |
 | IT13 | Acompanhar a instalação feita por outro integrante da equipe | Média | A primeira execução em máquina independente revelou três obstáculos que a documentação não cobria. Repetir o procedimento com outra pessoa é a única forma de validar o README |
 | IT07 | Confirmar campo Quarto como obrigatório | Baixa | Ver `requisitos.md`, seção 6 |
-| IT10 | Adquirir leitor de código de barras USB 2D, modo HID | Alta | Bloqueia a validação prática da US23. Leitores apenas 1D não leem DataMatrix e não atendem ao requisito de lote e validade |
+| IT10 | Adquirir leitor de código de barras USB 2D, modo HID | **Alta — virou requisito** | Confirmado que as caixas trazem DataMatrix (IT11), o leitor deixa de ser conveniência: sem ele não há captura automática de lote e validade. O código já está pronto e foi validado digitando os conteúdos à mão; falta a validação com o aparelho |
 | IT11 | ~~Verificar se as caixas recebidas trazem DataMatrix~~ | **Resolvido** | Confirmado em 15/09/2026: as caixas trazem DataMatrix. Lote e validade vêm da leitura. O leitor 2D (IT10) deixa de ser conveniência e passa a ser requisito |
 | IT12 | Avaliar a lista de preços da CMED como fonte de dados de medicamentos | Média | Confirmar se traz GTIN, formato e periodicidade. Importação para o banco local, nunca consulta em tempo de uso |
 | IT14 | Obter cópia das planilhas já sem a coluna de residente | Alta | Bloqueia a US28. A remoção precisa ser feita **no computador da instituição**, antes de o arquivo sair de lá: só devem circular as colunas de medicamento e princípio ativo |
