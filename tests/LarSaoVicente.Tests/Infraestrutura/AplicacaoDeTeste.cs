@@ -111,6 +111,14 @@ public class AplicacaoDeTeste : WebApplicationFactory<Program>, IAsyncLifetime
         return await consulta(contexto);
     }
 
+    /// <summary>Executa uma gravação no banco fora da aplicação, para preparar cenários.</summary>
+    public async Task ExecutarNoBancoAsync(Func<AppDbContext, Task> acao)
+    {
+        using var escopo = Services.CreateScope();
+        var contexto = escopo.ServiceProvider.GetRequiredService<AppDbContext>();
+        await acao(contexto);
+    }
+
     public override async ValueTask DisposeAsync()
     {
         // Encerrar a conexão descarta o banco em memória associado a ela.

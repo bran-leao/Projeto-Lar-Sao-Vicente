@@ -36,5 +36,12 @@ public enum PackageUnit
     CaixaMaster = 6,
 
     [Display(Name = "Unidade")]
-    Unidade = 7
+    Unidade = 7,
+
+    /// <summary>Envelope, como chegam os sachês de dipirona.</summary>
+    [Display(Name = "Envelope")]
+    Envelope = 8,
+
+    [Display(Name = "Ampola")]
+    Ampola = 9
 }
