@@ -1,0 +1,50 @@
+@model ScanViewModel
+
+<div class="cartao" style="max-width: 680px;">
+    <div class="cartao__cabecalho">Leitura da embalagem</div>
+
+    <div class="cartao__corpo">
+        <form method="post" asp-action="Identificar" novalidate>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <label asp-for="Codigo" class="form-label">Aponte o leitor para o código da caixa</label>
+
+            @*
+                O leitor USB funciona como teclado: digita o conteúdo e envia Enter sozinho,
+                o que para a aplicação é um envio de formulário comum. Não há driver, SDK
+                nem JavaScript envolvido — por isso o campo apenas recebe o foco.
+            *@
+            <input asp-for="Codigo" class="form-control form-control-lg" autocomplete="off"
+                   autofocus placeholder="Bipe a caixa ou digite o código" />
+            <span asp-validation-for="Codigo" class="text-danger small"></span>
+
+            <div class="form-text mt-2">
+                O sistema aceita o código de barras tradicional e o DataMatrix — aquele
+                quadradinho de pontinhos. No DataMatrix, lote e validade vêm junto e você
+                não precisa digitá-los.
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Identificar</button>
+                <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="cartao__cabecalho border-top border-bottom-0 fw-normal">
+        <strong class="d-block mb-1">Código danificado, ou caixa que não veio?</strong>
+        <p class="mb-2 text-secondary small">
+            Cartela avulsa, frasco solto e doação sem embalagem costumam não ter código
+            legível. Nesse caso, localize o item no catálogo e registre a entrada à mão —
+            informando de uma vez quantas unidades chegaram.
+        </p>
+        <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Procurar no catálogo</a>
+            <a class="btn btn-outline-secondary btn-sm" asp-action="Novo">Cadastrar item sem código</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

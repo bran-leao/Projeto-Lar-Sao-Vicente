@@ -1,0 +1,119 @@
+@model MedicationEntryFormViewModel
+@{
+    var acao = Model.EhEdicao ? "Editar" : "Nova";
+    var textoBotao = Model.EhEdicao ? "Salvar alterações" : "Registrar entrada";
+    var unidade = Model.UnidadeDoMedicamento?.ObterNomeExibicao().ToLowerInvariant() ?? "unidade";
+    var unidadePlural = unidade + "(s)";
+}
+
+<div class="cartao" style="max-width: 760px;">
+    <div class="cartao__cabecalho">
+        @(Model.EhEdicao ? "Editar entrada" : "Remessa recebida")
+    </div>
+
+    <div class="cartao__corpo">
+        <div class="alert alert-secondary" role="alert">
+            <strong>@Model.NomeDoMedicamento</strong>
+            @if (Model.IdentifiedByScan)
+            {
+                <span class="badge text-bg-light border ms-1">Identificado por leitura</span>
+            }
+        </div>
+
+        <form method="post" asp-action="@acao" asp-route-id="@Model.Id" novalidate>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <input type="hidden" asp-for="MedicationId" />
+            <input type="hidden" asp-for="IdentifiedByScan" />
+
+            <div class="row g-3">
+                <div class="col-12 col-md-5">
+                    <label asp-for="Quantity" class="form-label obrigatorio"></label>
+                    <div class="input-group">
+                        <input asp-for="Quantity" class="form-control form-control-lg" type="number" min="1" />
+                        <span class="input-group-text">@unidadePlural</span>
+                    </div>
+                    <div class="form-text">
+                        Informe de uma vez tudo que chegou deste mesmo lote. Onze envelopes
+                        são <strong>um</strong> registro com quantidade onze.
+                    </div>
+                    <span asp-validation-for="Quantity" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-7">
+                    <label asp-for="Origin" class="form-label obrigatorio"></label>
+                    <select asp-for="Origin" class="form-select"
+                            asp-items="Html.GetEnumSelectList<MedicationOrigin>()">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <div class="form-text">
+                        O que a família traz pertence àquele residente; o de doação é o que
+                        mais chega perto do vencimento.
+                    </div>
+                    <span asp-validation-for="Origin" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="LotNumber" class="form-label"></label>
+                    <input asp-for="LotNumber" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="LotNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="ReceivedOn" class="form-label obrigatorio"></label>
+                    <input asp-for="ReceivedOn" class="form-control" type="date" />
+                    <span asp-validation-for="ReceivedOn" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="ExpiryDate" class="form-label"></label>
+                    <input asp-for="ExpiryDate" class="form-control" type="date" />
+                    <span asp-validation-for="ExpiryDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6 d-flex align-items-center">
+                    <div class="form-check mt-md-4">
+                        <input asp-for="ExpiryNotIdentified" class="form-check-input" />
+                        <label asp-for="ExpiryNotIdentified" class="form-check-label"></label>
+                        <div class="form-text">
+                            Cartela avulsa costuma chegar sem validade legível. Marque aqui —
+                            a entrada fica destacada para quem confere.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="SerialNumber" class="form-label"></label>
+                    <input asp-for="SerialNumber" class="form-control" autocomplete="off" />
+                    <div class="form-text">Preenchido pela leitura do DataMatrix, quando houver.</div>
+                    <span asp-validation-for="SerialNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-4 mb-0" role="alert">
+                A entrada nasce <strong>aguardando conferência</strong> e ainda não conta no
+                estoque. Alguém precisa revisar e liberar antes que o medicamento fique
+                disponível para uso.
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">@textoBotao</button>
+                <a class="btn btn-outline-secondary" asp-controller="Medications"
+                   asp-action="Detalhes" asp-route-id="@Model.MedicationId">Cancelar</a>
+            </div>
+
+            <p class="text-secondary small mt-3 mb-0">Os campos marcados com * são obrigatórios.</p>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,229 @@
+@model MedicationDetailsViewModel
+@{
+    var estaAtivo = Model.Status == MedicationStatus.Ativo;
+    var unidadePlural = Model.PackageUnit.ObterNomeExibicao().ToLowerInvariant() + "(s)";
+}
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-start mb-3">
+    <div>
+        <a asp-action="Index" class="text-decoration-none small">&larr; Voltar para o catálogo</a>
+        <h2 class="h4 mt-1 mb-1">@Model.NomeExibicao</h2>
+        @if (estaAtivo)
+        {
+            <span class="badge text-bg-success">Ativo</span>
+        }
+        else
+        {
+            <span class="badge text-bg-secondary">Inativo</span>
+        }
+        @if (Model.Category == MedicationCategory.Insumo)
+        {
+            <span class="badge text-bg-light border">Insumo</span>
+        }
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+        @if (estaAtivo)
+        {
+            <a class="btn btn-primary" asp-controller="MedicationEntries" asp-action="Nova"
+               asp-route-medicamentoId="@Model.Id">Registrar entrada</a>
+        }
+
+        <a class="btn btn-outline-secondary" asp-action="Editar" asp-route-id="@Model.Id">Editar</a>
+
+        @if (estaAtivo)
+        {
+            @* Altera dados: vai por POST, com token antifalsificação. *@
+            <form method="post" asp-action="Inativar" asp-route-id="@Model.Id"
+                  onsubmit="return confirm('Confirmar a inativação de @Model.NomeExibicao? O histórico de entradas será preservado.');">
+                <button type="submit" class="btn btn-outline-danger">Inativar</button>
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-action="Reativar" asp-route-id="@Model.Id">
+                <button type="submit" class="btn btn-outline-success">Reativar</button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-md-6">
+        <div class="cartao h-100">
+            <div class="cartao__cabecalho">Em estoque</div>
+            <div class="cartao__corpo">
+                <p class="h3 mb-1">@Model.EmEstoque <span class="h6 text-secondary">@unidadePlural</span></p>
+                <p class="text-secondary small mb-0">
+                    Soma das entradas já conferidas. Nada é transferido de lugar: uma
+                    entrada pendente simplesmente não é contada.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="cartao h-100">
+            <div class="cartao__cabecalho">Aguardando conferência</div>
+            <div class="cartao__corpo">
+                <p class="h3 mb-1">@Model.AguardandoConferencia</p>
+                @if (Model.AguardandoConferencia > 0)
+                {
+                    <a asp-controller="MedicationEntries" asp-action="Index" class="small">
+                        Ir para a conferência
+                    </a>
+                }
+                else
+                {
+                    <p class="text-secondary small mb-0">Nada pendente para este item.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cartao mb-3">
+    <div class="cartao__cabecalho">Informações do item</div>
+    <div class="cartao__corpo">
+        <dl class="row mb-0">
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Nome</dt>
+            <dd class="col-sm-8 col-lg-9">@Model.CommercialName</dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Princípio ativo</dt>
+            <dd class="col-sm-8 col-lg-9">
+                @if (string.IsNullOrWhiteSpace(Model.ActiveIngredient))
+                {
+                    <span class="text-secondary">Não se aplica</span>
+                }
+                else
+                {
+                    @Model.ActiveIngredient
+                }
+            </dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Concentração</dt>
+            <dd class="col-sm-8 col-lg-9">
+                @(string.IsNullOrWhiteSpace(Model.Strength) ? "—" : Model.Strength)
+            </dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Forma farmacêutica</dt>
+            <dd class="col-sm-8 col-lg-9">
+                @(Model.Form is { } forma ? forma.ObterNomeExibicao() : "—")
+            </dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Embalagem</dt>
+            <dd class="col-sm-8 col-lg-9">
+                @Model.PackageUnit.ObterNomeExibicao()
+                @if (Model.UnitsPerPackage is { } porEmbalagem && porEmbalagem > 1)
+                {
+                    <span class="text-secondary">com @porEmbalagem</span>
+                }
+            </dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Código de barras</dt>
+            <dd class="col-sm-8 col-lg-9">
+                @if (string.IsNullOrWhiteSpace(Model.Barcode))
+                {
+                    <span class="text-secondary">Sem código cadastrado</span>
+                }
+                else
+                {
+                    <code>@Model.Barcode</code>
+                }
+            </dd>
+
+            <dt class="col-sm-4 col-lg-3 text-secondary fw-normal">Observações</dt>
+            <dd class="col-sm-8 col-lg-9 mb-0">
+                @if (string.IsNullOrWhiteSpace(Model.Notes))
+                {
+                    <span class="text-secondary">Nenhuma observação registrada.</span>
+                }
+                else
+                {
+                    @Model.Notes
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="cartao__cabecalho border-top border-bottom-0 text-secondary fw-normal small">
+        Cadastrado em @Model.CriadoEm.
+        @if (Model.AtualizadoEm is not null)
+        {
+            <text>Última alteração em @Model.AtualizadoEm.</text>
+        }
+    </div>
+</div>
+
+<div class="cartao">
+    <div class="cartao__cabecalho">Entradas registradas</div>
+
+    @if (Model.Entradas.Count == 0)
+    {
+        <div class="cartao__corpo estado-vazio">
+            <p class="estado-vazio__titulo">Nenhuma entrada registrada</p>
+            <p class="mb-3">Este item ainda não recebeu nenhuma remessa pelo sistema.</p>
+            @if (estaAtivo)
+            {
+                <a class="btn btn-primary btn-sm" asp-controller="MedicationEntries"
+                   asp-action="Nova" asp-route-medicamentoId="@Model.Id">Registrar entrada</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table tabela-dados align-middle mb-0">
+                <caption class="visually-hidden">Entradas registradas para este item</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Recebido em</th>
+                        <th scope="col" class="text-end">Quantidade</th>
+                        <th scope="col">Lote</th>
+                        <th scope="col">Validade</th>
+                        <th scope="col">Origem</th>
+                        <th scope="col">Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entrada in Model.Entradas)
+                    {
+                        <tr>
+                            <td>@entrada.Recebimento</td>
+                            <td class="text-end fw-semibold">@entrada.Quantity</td>
+                            <td>@(string.IsNullOrWhiteSpace(entrada.LotNumber) ? "—" : entrada.LotNumber)</td>
+                            <td>
+                                @if (entrada.ValidadeNaoIdentificada)
+                                {
+                                    <span class="badge text-bg-warning">Não identificada</span>
+                                }
+                                else if (entrada.Vencido)
+                                {
+                                    <span class="badge text-bg-danger">@entrada.Validade</span>
+                                }
+                                else
+                                {
+                                    @entrada.Validade
+                                }
+                            </td>
+                            <td>@entrada.Origin.ObterNomeExibicao()</td>
+                            <td>
+                                @switch (entrada.Status)
+                                {
+                                    case MedicationEntryStatus.Conferida:
+                                        <span class="badge text-bg-success">Conferida</span>
+                                        break;
+                                    case MedicationEntryStatus.Recusada:
+                                        <span class="badge text-bg-secondary" title="@entrada.RejectionReason">Recusada</span>
+                                        break;
+                                    default:
+                                        <span class="badge text-bg-warning">Aguardando conferência</span>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

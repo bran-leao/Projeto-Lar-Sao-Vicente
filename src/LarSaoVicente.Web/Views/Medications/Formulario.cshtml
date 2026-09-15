@@ -1,0 +1,135 @@
+@model MedicationFormViewModel
+@{
+    var acao = Model.EhEdicao ? "Editar" : "Novo";
+    var textoBotao = Model.EhEdicao ? "Salvar alterações" : "Cadastrar no catálogo";
+}
+
+<div class="cartao" style="max-width: 820px;">
+    <div class="cartao__cabecalho">
+        @(Model.EhEdicao ? "Editar item do catálogo" : "Dados do item")
+    </div>
+
+    <div class="cartao__corpo">
+        @if (Model.VeioDeLeitura && !Model.EhEdicao)
+        {
+            <div class="alert alert-info" role="alert">
+                <strong>Código novo.</strong> Complete os dados uma única vez — da próxima
+                caixa em diante o sistema reconhece sozinho. Depois de salvar, você segue
+                direto para registrar a entrada.
+            </div>
+        }
+
+        <form method="post" asp-action="@acao" asp-route-id="@Model.Id" novalidate>
+
+            @* Erros gerais, como uma regra recusada pelo domínio. *@
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            @* Dados lidos no DataMatrix, preservados para a entrada que vem depois. *@
+            <input type="hidden" asp-for="LoteLido" />
+            <input type="hidden" asp-for="ValidadeLida" />
+            <input type="hidden" asp-for="SerieLida" />
+            <input type="hidden" asp-for="VeioDeLeitura" />
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label asp-for="Category" class="form-label obrigatorio"></label>
+                    <select asp-for="Category" class="form-select"
+                            asp-items="Html.GetEnumSelectList<MedicationCategory>()">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <div class="form-text">
+                        Luvas, fraldas e materiais de procedimento são insumos, e não pedem
+                        princípio ativo nem forma farmacêutica.
+                    </div>
+                    <span asp-validation-for="Category" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Barcode" class="form-label"></label>
+                    <input asp-for="Barcode" class="form-control" autocomplete="off" />
+                    <div class="form-text">
+                        Pode ficar em branco: cartela avulsa de doação costuma não ter código.
+                    </div>
+                    <span asp-validation-for="Barcode" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="CommercialName" class="form-label obrigatorio"></label>
+                    <input asp-for="CommercialName" class="form-control" autocomplete="off"
+                           placeholder="Como está escrito na caixa" />
+                    <span asp-validation-for="CommercialName" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-7">
+                    <label asp-for="ActiveIngredient" class="form-label"></label>
+                    <input asp-for="ActiveIngredient" class="form-control" autocomplete="off"
+                           placeholder="Ex.: Nitrofurantoína" />
+                    <div class="form-text">
+                        Obrigatório para medicamento. É o que permite achar o mesmo remédio
+                        quando a marca muda.
+                    </div>
+                    <span asp-validation-for="ActiveIngredient" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-5">
+                    <label asp-for="Strength" class="form-label"></label>
+                    <input asp-for="Strength" class="form-control" autocomplete="off"
+                           placeholder="Ex.: 100 mg" />
+                    <span asp-validation-for="Strength" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label asp-for="Form" class="form-label"></label>
+                    <select asp-for="Form" class="form-select"
+                            asp-items="Html.GetEnumSelectList<PharmaceuticalForm>()">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <span asp-validation-for="Form" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label asp-for="PackageUnit" class="form-label obrigatorio"></label>
+                    <select asp-for="PackageUnit" class="form-select"
+                            asp-items="Html.GetEnumSelectList<PackageUnit>()">
+                        <option value="">Selecione...</option>
+                    </select>
+                    <div class="form-text">Como o item é recebido e contado.</div>
+                    <span asp-validation-for="PackageUnit" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label asp-for="UnitsPerPackage" class="form-label"></label>
+                    <input asp-for="UnitsPerPackage" class="form-control" type="number" min="1"
+                           placeholder="Ex.: 30" />
+                    <div class="form-text">Quantos vêm dentro de uma embalagem.</div>
+                    <span asp-validation-for="UnitsPerPackage" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">@textoBotao</button>
+
+                @if (Model.EhEdicao)
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Detalhes" asp-route-id="@Model.Id">Cancelar</a>
+                }
+                else
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+                }
+            </div>
+
+            <p class="text-secondary small mt-3 mb-0">Os campos marcados com * são obrigatórios.</p>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

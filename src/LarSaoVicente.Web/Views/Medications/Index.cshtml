@@ -1,0 +1,131 @@
+@model MedicationIndexViewModel
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+    <form method="get" asp-action="Index" class="d-flex gap-2 flex-grow-1" style="max-width: 480px;">
+        <input type="search" name="busca" value="@Model.Busca" class="form-control"
+               placeholder="Nome comercial ou princípio ativo"
+               aria-label="Pesquisar no catálogo por nome comercial ou princípio ativo" />
+        <button type="submit" class="btn btn-outline-secondary">Pesquisar</button>
+    </form>
+
+    <div class="d-flex gap-2">
+        <a class="btn btn-primary" asp-action="Identificar">Ler código</a>
+        <a class="btn btn-outline-primary" asp-action="Novo">Novo item</a>
+    </div>
+</div>
+
+<div class="cartao">
+    @if (Model.SemCadastros)
+    {
+        <div class="cartao__corpo estado-vazio">
+            <p class="estado-vazio__titulo">O catálogo está vazio</p>
+            <p class="mb-3">
+                O catálogo se constrói pelo uso: a cada caixa nova que passa pelo balcão,
+                alguém completa os dados uma única vez. Da segunda caixa em diante o
+                sistema reconhece sozinho.
+            </p>
+            <div class="d-flex gap-2 justify-content-center">
+                <a class="btn btn-primary btn-sm" asp-action="Identificar">Ler o código de uma caixa</a>
+                <a class="btn btn-outline-secondary btn-sm" asp-action="Novo">Cadastrar sem código</a>
+            </div>
+        </div>
+    }
+    else if (Model.BuscaSemResultado)
+    {
+        <div class="cartao__corpo estado-vazio">
+            <p class="estado-vazio__titulo">Nenhum item encontrado</p>
+            <p class="mb-3">
+                Nada no catálogo corresponde a &ldquo;@Model.Busca&rdquo;, nem pelo nome
+                comercial nem pelo princípio ativo.
+            </p>
+            <div class="d-flex gap-2 justify-content-center">
+                <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Limpar pesquisa</a>
+                <a class="btn btn-primary btn-sm" asp-action="Novo">Cadastrar este item</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table tabela-dados align-middle mb-0">
+                <caption class="visually-hidden">Catálogo de medicamentos e insumos</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Princípio ativo</th>
+                        <th scope="col">Embalagem</th>
+                        <th scope="col" class="text-end">Em estoque</th>
+                        <th scope="col">Situação</th>
+                        <th scope="col"><span class="visually-hidden">Ações</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Itens)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Detalhes" asp-route-id="@item.Id"
+                                   class="text-decoration-none fw-semibold">
+                                    @item.NomeExibicao
+                                </a>
+                                @if (item.Category == MedicationCategory.Insumo)
+                                {
+                                    <span class="badge text-bg-light border ms-1">Insumo</span>
+                                }
+                                @if (item.TemCodigoDeBarras)
+                                {
+                                    <span class="badge text-bg-light border ms-1" title="Possui código de barras cadastrado">Código</span>
+                                }
+                            </td>
+                            <td>
+                                @if (string.IsNullOrWhiteSpace(item.ActiveIngredient))
+                                {
+                                    <span class="text-secondary">—</span>
+                                }
+                                else
+                                {
+                                    @item.ActiveIngredient
+                                }
+                            </td>
+                            <td>
+                                @item.PackageUnit.ObterNomeExibicao()
+                                @if (item.UnitsPerPackage is { } porEmbalagem && porEmbalagem > 1)
+                                {
+                                    <span class="text-secondary">com @porEmbalagem</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                @if (item.EmEstoque > 0)
+                                {
+                                    <strong>@item.EmEstoque</strong>
+                                }
+                                else
+                                {
+                                    <span class="text-secondary">0</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == MedicationStatus.Ativo)
+                                {
+                                    <span class="badge text-bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-secondary">Inativo</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-outline-secondary btn-sm"
+                                   asp-action="Detalhes" asp-route-id="@item.Id">Abrir</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cartao__cabecalho border-top border-bottom-0 text-secondary fw-normal small">
+            @Model.Itens.Count item(ns) exibido(s). O estoque é a soma das entradas já conferidas.
+        </div>
+    }
+</div>
