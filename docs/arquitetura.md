@@ -206,6 +206,13 @@ instituição, não de suposição.
 registros distintos, o que é correto para rastreabilidade. A chave serve para localizar
 e para **avisar** sobre um provável duplicado, nunca para impedir o cadastro.
 
+**O código é guardado sempre em 14 dígitos.** O EAN-13 impresso na caixa e o GTIN-14
+que vem dentro do DataMatrix designam o mesmo produto: o segundo é o primeiro com um
+zero à esquerda. Sem essa forma canônica, a mesma caixa cadastrada pela digitação e pela
+leitura viraria **dois itens de catálogo**, e o índice único não pegaria a duplicata. O
+dígito verificador não muda com o zero, porque os pesos são atribuídos da direita para a
+esquerda.
+
 **Validação do código de barras.** `Gtin.IsValid` aceita EAN-8, UPC-A, EAN-13 e DUN-14 —
 todos da mesma família e com o mesmo dígito verificador. A conferência acontece antes de
 qualquer consulta ao banco e sem depender de rede, conforme a seção 5.1.
@@ -255,9 +262,14 @@ A caixa de medicamento pode trazer dois códigos, que dizem coisas diferentes:
 A consequência é direta: com EAN-13 apenas, lote e validade precisam ser digitados a
 cada entrada. Para doações isso é crítico, pois validade curta é o principal risco.
 
-A implantação do SNCM (Lei nº 11.903/2009) sofreu sucessivos adiamentos, e não se pode
-assumir que toda caixa recebida trará DataMatrix. **O sistema deve funcionar nos dois
-casos**: quando houver DataMatrix, lote e validade são preenchidos automaticamente;
+**Confirmado com a instituição em 15/09/2026: as caixas recebidas trazem DataMatrix.**
+A pergunta que bloqueava o desenho (item IT11) está respondida, e lote e validade podem
+ser capturados na leitura em vez de digitados a cada entrada.
+
+Isso **não elimina** o caminho manual. A implantação do SNCM (Lei nº 11.903/2009) sofreu
+sucessivos adiamentos e nem toda embalagem o traz; além disso, o código pode chegar
+rasgado, borrado ou simplesmente ausente, como na cartela avulsa de doação. O sistema
+funciona nos dois casos: quando houver DataMatrix, lote e validade vêm preenchidos;
 quando não houver, são digitados.
 
 ### Catálogo que se constrói pelo uso
@@ -281,6 +293,35 @@ apresentação.
 A importação de uma base pública de medicamentos (a lista de preços da CMED é a
 candidata mais promissora, por conter GTIN) permanece como **melhoria futura**, na
 forma de importação para o banco local, nunca como consulta em tempo de uso.
+
+### O que vem dentro do DataMatrix
+
+O conteúdo segue o padrão GS1: pares de **identificador de aplicação** e valor, emendados
+sem separador visível.
+
+| Identificador | Conteúdo | Comprimento |
+|---------------|----------|-------------|
+| `01` | GTIN do produto | 14, fixo |
+| `17` | Validade, no formato AAMMDD | 6, fixo |
+| `10` | Lote | variável, até 20 |
+| `21` | Número de série da caixa | variável, até 20 |
+
+Os campos de comprimento variável terminam no separador GS (ASCII 29), que o leitor
+digita como um caractere de controle invisível. `BarcodeScan.TryParse` percorre esses
+pares e devolve o que conseguiu extrair.
+
+Dois detalhes do padrão que o sistema trata e que costumam ser esquecidos:
+
+- **Dia `00` significa "último dia do mês".** É o caso mais comum em medicamento, cuja
+  embalagem traz apenas mês e ano. Tratar esse zero como data inválida descartaria
+  justamente a validade que interessa.
+- **Identificador desconhecido interrompe a leitura, sem invalidá-la.** Sem saber o
+  comprimento do campo, seguir adiante significaria interpretar lixo como lote ou
+  validade. O sistema devolve o que já leu e pede o resto.
+
+Quando o código traz o produto mas a data vem incoerente — mês 13, por exemplo — a
+leitura **não** é recusada: o produto é identificado e a validade é pedida ao usuário.
+Recusar tudo por causa de um campo deixaria a caixa fora do controle.
 
 ### Validação em três camadas, toda local
 
@@ -337,6 +378,25 @@ Consequências:
   responder quantas doações vencidas a instituição recebeu em um período.
 - O histórico é único, do recebimento à conferência, com data e responsável em cada
   etapa — preenchidos por `AuditableEntity`.
+
+### Uma entrada, muitas unidades
+
+Requisito levantado com a enfermagem em 15/09/2026, a partir do uso real: se chegam onze
+envelopes de dipirona, ninguém deve preencher o formulário onze vezes.
+
+A **quantidade pertence à entrada**, nunca ao catálogo. O catálogo diz *o que é*
+("Dipirona 500 mg, envelope"); a entrada diz *quanto chegou, de que lote, com que
+validade e por qual origem*. Uma entrada com quantidade onze é um registro só.
+
+Isso mantém a rastreabilidade intacta: as onze unidades compartilham lote e validade
+porque vieram juntas. Se chegarem envelopes de lotes diferentes, são entradas diferentes
+— o que é correto, e é justamente o que um registro por unidade não conseguiria
+representar melhor.
+
+A quantidade é também **editável antes da conferência**. Quem registra pode ter contado
+errado, e quem confere precisa poder corrigir para o que realmente existe na prateleira
+antes de liberar. Depois de conferida, a correção passa a ser um ajuste de estoque com
+motivo registrado, e não uma edição silenciosa.
 
 ### Quando a conferência é obrigatória
 

@@ -78,6 +78,11 @@ public class Medication : AuditableEntity
     /// Opcional de propósito: cartela avulsa recebida por doação frequentemente não tem
     /// código algum, e o cadastro manual precisa continuar possível. O índice do banco é
     /// único, mas admite vários registros sem código.
+    /// <para>
+    /// Guardado sempre em 14 dígitos. O EAN-13 impresso na caixa e o GTIN-14 que vem
+    /// dentro do DataMatrix designam o mesmo produto, e sem essa forma canônica a mesma
+    /// caixa cadastrada pela digitação e pela leitura viraria dois itens distintos.
+    /// </para>
     /// </remarks>
     public string? Barcode { get; private set; }
 
@@ -247,10 +252,15 @@ public class Medication : AuditableEntity
             throw new DomainValidationException($"A quantidade por embalagem deve ser no máximo {MaxUnitsPerPackage}.");
         }
 
-        if (barcode is not null && !Gtin.IsValid(barcode))
+        if (barcode is not null)
         {
-            throw new DomainValidationException(
-                "O código de barras informado é inválido. Confira os dígitos ou refaça a leitura.");
+            if (!Gtin.IsValid(barcode))
+            {
+                throw new DomainValidationException(
+                    "O código de barras informado é inválido. Confira os dígitos ou refaça a leitura.");
+            }
+
+            barcode = Gtin.ToGtin14(barcode);
         }
 
         if (notes is { Length: > NotesMaxLength })
