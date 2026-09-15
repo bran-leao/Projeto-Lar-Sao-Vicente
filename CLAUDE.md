@@ -33,12 +33,20 @@ Sprint tem escopo acordado. Se identificar algo útil fora do escopo, registre e
 
 Sprints de **7 dias**, com entrega aos **sábados**. Calendário em `docs/sprints.md`.
 
-Situação atual: **Sprint 1 concluída** (US01 a US07), entrega em 12/09/2026.
+Situação atual: **Sprint 2 concluída** (US09, US23, US24, US10, US26 e US27), entrega em
+19/09/2026. A Sprint 1 (US01 a US07) foi entregue em 12/09/2026.
 
-Próxima Sprint: **catálogo de medicamentos com leitura de código de barras** (US09, US23
-e US24). A ordem foi repriorizada após a Sprint 1 — ver `docs/product-backlog.md`. O
-desenho do módulo está em `docs/arquitetura.md`, seção 5.1: **o sistema não depende de
-API externa** para identificar medicamentos; o catálogo se constrói pelo uso.
+O desenho do módulo de medicamentos está em `docs/arquitetura.md`, seções 5.1 a 5.3:
+**o sistema não depende de API externa** para identificar medicamentos, o catálogo se
+constrói pelo uso, e **o estoque é a soma das entradas conferidas** — nada é transferido
+de um lugar para outro. A instituição confirmou que as caixas trazem **DataMatrix**, de
+modo que lote e validade vêm da leitura.
+
+**A quantidade pertence à entrada, nunca ao catálogo.** Onze envelopes são um registro
+com quantidade onze.
+
+Próxima Sprint: a confirmar no Planning. Candidatos em `docs/product-backlog.md` —
+US25 (alerta de vencimento), US28 (importação das planilhas) e US08 (perfis de acesso).
 
 ## Tecnologias — não altere sem justificar
 
