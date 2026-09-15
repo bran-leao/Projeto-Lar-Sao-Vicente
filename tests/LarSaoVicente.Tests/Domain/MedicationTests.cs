@@ -15,6 +15,9 @@ public class MedicationTests
 {
     private const string Ean13Valido = "7891000315507";
 
+    /// <summary>O mesmo produto na forma canônica de 14 dígitos, como vem no DataMatrix.</summary>
+    private const string Gtin14Equivalente = "07891000315507";
+
     private static Medication CriarMedicamentoValido(
         string nome = "Macrodantina",
         string? principioAtivo = "Nitrofurantoína",
@@ -159,11 +162,11 @@ public class MedicationTests
     }
 
     [Fact]
-    public void Criar_ComCodigoDeBarrasValido_Aceita()
+    public void Criar_ComCodigoDeBarrasValido_GuardaEmQuatorzeDigitos()
     {
         var item = CriarMedicamentoValido(codigoBarras: Ean13Valido);
 
-        Assert.Equal(Ean13Valido, item.Barcode);
+        Assert.Equal(Gtin14Equivalente, item.Barcode);
     }
 
     [Fact]
@@ -171,7 +174,18 @@ public class MedicationTests
     {
         var item = CriarMedicamentoValido(codigoBarras: " 789 1000 3155 07 ");
 
-        Assert.Equal(Ean13Valido, item.Barcode);
+        Assert.Equal(Gtin14Equivalente, item.Barcode);
+    }
+
+    [Fact]
+    public void Criar_PeloEanDigitadoOuPeloGtinDoDataMatrix_ProduzOMesmoCodigo()
+    {
+        // Sem a forma canônica, a mesma caixa cadastrada pela digitação e pela leitura
+        // viraria dois itens de catálogo, e o índice único não pegaria a duplicata.
+        var digitado = CriarMedicamentoValido(codigoBarras: Ean13Valido);
+        var lido = CriarMedicamentoValido(codigoBarras: Gtin14Equivalente);
+
+        Assert.Equal(digitado.Barcode, lido.Barcode);
     }
 
     [Fact]
@@ -272,7 +286,7 @@ public class MedicationTests
         Assert.Equal("Nitrofurantoína", item.CommercialName);
         Assert.Equal(PharmaceuticalForm.Capsula, item.Form);
         Assert.Equal(30, item.UnitsPerPackage);
-        Assert.Equal(Ean13Valido, item.Barcode);
+        Assert.Equal(Gtin14Equivalente, item.Barcode);
         Assert.Equal("Antibiótico urinário.", item.Notes);
     }
 

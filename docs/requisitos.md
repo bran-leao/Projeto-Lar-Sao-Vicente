@@ -197,11 +197,9 @@ Sprint Review:
 
 ### Sobre o módulo de medicamentos (Sprint 2 em diante)
 
-5. **Tipo de código nas embalagens.** As caixas recebidas trazem o código bidimensional
-   DataMatrix, ou apenas o código de barras tradicional? A resposta define se lote e
-   validade poderão ser capturados automaticamente na leitura ou terão de ser digitados
-   a cada entrada. Pedir para conferirem algumas caixas na despensa, de compra e de
-   doação.
+5. ~~**Tipo de código nas embalagens.**~~ **Respondido em 15/09/2026: as caixas trazem
+   DataMatrix.** Lote e validade são capturados na leitura, sem digitação. O caminho
+   manual continua necessário para código danificado, cartela avulsa e doação sem caixa.
 6. **Forma de chegada das doações.** Caixa lacrada, cartela avulsa ou frasco já aberto?
    Cartela avulsa costuma não ter código de barras algum, situação que o sistema precisa
    prever.

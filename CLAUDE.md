@@ -125,7 +125,7 @@ propor mudanças estruturais.
 ## Como trabalhar
 
 1. **Compile com frequência:** `dotnet build`
-2. **Rode os testes antes de concluir:** `dotnet test` (92 testes devem passar)
+2. **Rode os testes antes de concluir:** `dotnet test` (110 testes devem passar)
 3. **Execute a aplicação.** Quatro dos cinco defeitos da Sprint 1 compilavam sem erro e
    só apareceram com o sistema rodando no navegador. Compilar não é verificar.
 4. **Corrija a causa raiz.** Não desabilite validações nem esconda erros para fazer algo

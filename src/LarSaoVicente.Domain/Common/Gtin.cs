@@ -57,6 +57,21 @@ public static class Gtin
     }
 
     /// <summary>
+    /// Traz o código para a forma canônica de 14 dígitos, completando com zeros à esquerda.
+    /// </summary>
+    /// <remarks>
+    /// O EAN-13 impresso na caixa e o GTIN-14 que vem dentro do DataMatrix designam o
+    /// <b>mesmo produto</b>: o segundo é o primeiro com um zero na frente. Guardar sempre
+    /// em 14 dígitos é o que faz o índice único funcionar de verdade — sem isso, a mesma
+    /// caixa cadastrada pela digitação e pela leitura viraria dois itens de catálogo.
+    /// <para>
+    /// O dígito verificador não muda: os pesos são atribuídos da direita para a esquerda,
+    /// e o zero acrescentado à esquerda não soma nada.
+    /// </para>
+    /// </remarks>
+    public static string ToGtin14(string code) => code.PadLeft(MaxLength, '0');
+
+    /// <summary>
     /// Calcula o dígito verificador para o corpo do código, sem o último dígito.
     /// </summary>
     public static int CalculateCheckDigit(string payload)
