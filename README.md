@@ -38,15 +38,13 @@ Identity · Bootstrap 5.3 · xUnit
 
 ### 1. Clonar o repositório
 
-O desenvolvimento acontece na branch `claude/tcc-project-96i658`. A branch `main`
-contém apenas este README.
-
 ```bash
-git clone -b claude/tcc-project-96i658 https://github.com/bran-leao/Projeto-Lar-Sao-Vicente.git
+git clone https://github.com/bran-leao/Projeto-Lar-Sao-Vicente.git
 cd Projeto-Lar-Sao-Vicente
 ```
 
-> Clonar sem o parâmetro `-b` traz a `main`, e o projeto parecerá vazio.
+A branch principal é a `main`. Quem já tinha clonado antes desta versão encontrou
+apenas o README: apague a pasta e clone novamente.
 
 Para descobrir qual instância do SQL Server existe na máquina, no PowerShell:
 
